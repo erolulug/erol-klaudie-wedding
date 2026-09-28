@@ -59,9 +59,9 @@ export default function Scene11RSVP({ onNext, onPrev, isActive }: SceneProps) {
             
             <div className="rounded-xl overflow-hidden border border-dusty-blue/10">
               <iframe 
-                src="https://docs.google.com/forms/d/e/1FAIpQLScsIlBNUBztjkgNsHn3dhjtuhW_GsH2mXjGCl-QIlJ6b4ulOw/viewform?embedded=true" 
-                width="100%" 
-                height="967" 
+                src="https://docs.google.com/forms/d/e/1FAIpQLSffPqVzNMfWKuFzvOAACTeEzoW4iNIsr61g6BlURAOnqk6ktQ/viewform?embedded=true"
+                width="100%"
+                height="1600"
                 frameBorder="0" 
                 marginHeight={0} 
                 marginWidth={0}
