@@ -3,10 +3,9 @@
 Place your wedding music files in this directory.
 
 ## Current file:
-- `wedding-music.mp3` - "Alex Warren - Ordinary" (4.5MB)
+- `wedding-music.mp3` - background music, loops while guests view the invitation
 
 ## Optimization Recommendations:
-- **Current file is large (4.5MB)** - Consider compressing for faster loading
 - Use online tools like [Audio Compressor](https://www.freeconvert.com/audio-compressor) 
 - Target: 128kbps MP3, mono if possible, under 2MB
 - Test different bitrates: 96kbps, 128kbps, 160kbps
