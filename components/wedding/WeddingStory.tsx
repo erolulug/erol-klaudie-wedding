@@ -47,7 +47,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
   const [isAudioError, setIsAudioError] = useState(false);
 
   // Background music - add your wedding music file to public/audio/
-  const [play, { stop, pause, sound }] = useSound(withBasePath('/audio/wedding-music.mp3'), {
+  const [play, { stop, pause, sound }] = useSound(withBasePath('/audio/wedding-music-v2.mp3'), {
     loop: true,
     volume: 0.3,
     preload: true, // Preload the audio file
@@ -57,7 +57,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       setIsAudioError(false);
     },
     onloaderror: (error: any) => {
-      console.log('Could not load wedding music. Please add wedding-music.mp3 to public/audio/', error);
+      console.log('Could not load wedding music. Please add wedding-music-v2.mp3 to public/audio/', error);
       setIsAudioLoaded(false);
       setIsAudioError(true);
     }
