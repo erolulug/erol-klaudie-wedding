@@ -4,7 +4,7 @@ import { withBasePath } from '@/lib/utils';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
-import { Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import useSound from 'use-sound';
 import { useLanguage, languages } from '@/lib/i18n';
 
@@ -341,27 +341,39 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
             prevScene();
           }}
           onTouchEnd={(e) => e.stopPropagation()}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-50 w-11 h-11 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
+          className="group absolute left-2 top-1/2 -translate-y-1/2 z-50 w-14 h-14 flex items-center justify-center text-white drop-shadow-lg transition-transform hover:scale-110"
           title={t.story.back}
           aria-label={t.story.back}
         >
-          <ChevronLeft size={26} />
+          <Heart
+            className="absolute inset-0 w-full h-full text-white/70 fill-black/40 group-hover:fill-black/60 transition-colors"
+            strokeWidth={1.5}
+          />
+          <ChevronLeft size={22} strokeWidth={2.5} className="relative -mt-1" />
         </button>
       )}
 
       {currentScene < scenes.length - 1 && (
-        <button
+        <motion.button
           onClick={(e) => {
             e.stopPropagation();
             nextScene();
           }}
           onTouchEnd={(e) => e.stopPropagation()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-50 w-11 h-11 bg-white/80 hover:bg-white rounded-full flex items-center justify-center text-gray-900 shadow-lg transition-colors"
+          className="group absolute right-2 top-1/2 z-50 w-14 h-14 -mt-7 flex items-center justify-center text-white drop-shadow-lg"
           title={t.story.next}
           aria-label={t.story.next}
+          // Gentle heartbeat so guests notice where to go next
+          animate={{ scale: [1, 1.12, 1, 1.08, 1] }}
+          transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 1, ease: 'easeInOut' }}
+          whileHover={{ scale: 1.15 }}
         >
-          <ChevronRight size={26} />
-        </button>
+          <Heart
+            className="absolute inset-0 w-full h-full text-white fill-[#5B82AB] group-hover:fill-[#4A6F96] transition-colors"
+            strokeWidth={1.5}
+          />
+          <ChevronRight size={22} strokeWidth={2.5} className="relative -mt-1" />
+        </motion.button>
       )}
 
       {/* Page counter */}
