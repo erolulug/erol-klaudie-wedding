@@ -333,35 +333,40 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       </AnimatePresence>
 
 
-      {/* Back / Next buttons */}
-      <div
-        className="absolute bottom-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none"
-        onClick={(e) => e.stopPropagation()}
-        onTouchEnd={(e) => e.stopPropagation()}
-      >
+      {/* Back / Next buttons, vertically centred on the sides */}
+      {currentScene > 0 && (
         <button
-          onClick={prevScene}
-          className={`pointer-events-auto flex items-center gap-1 pl-3 pr-4 py-2 bg-black/50 hover:bg-black/70 rounded-full text-white text-sm font-medium transition-colors ${
-            currentScene === 0 ? 'invisible' : ''
-          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            prevScene();
+          }}
+          onTouchEnd={(e) => e.stopPropagation()}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-50 w-11 h-11 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
+          title={t.story.back}
+          aria-label={t.story.back}
         >
-          <ChevronLeft size={18} />
-          {t.story.back}
+          <ChevronLeft size={26} />
         </button>
+      )}
 
-        <span className="px-3 py-1 bg-black/50 rounded-full text-white/90 text-xs font-medium">
-          {currentScene + 1} / {scenes.length}
-        </span>
-
+      {currentScene < scenes.length - 1 && (
         <button
-          onClick={nextScene}
-          className={`pointer-events-auto flex items-center gap-1 pl-4 pr-3 py-2 bg-white/90 hover:bg-white rounded-full text-gray-900 text-sm font-medium shadow-lg transition-colors ${
-            currentScene === scenes.length - 1 ? 'invisible' : ''
-          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            nextScene();
+          }}
+          onTouchEnd={(e) => e.stopPropagation()}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-50 w-11 h-11 bg-white/80 hover:bg-white rounded-full flex items-center justify-center text-gray-900 shadow-lg transition-colors"
+          title={t.story.next}
+          aria-label={t.story.next}
         >
-          {t.story.next}
-          <ChevronRight size={18} />
+          <ChevronRight size={26} />
         </button>
+      )}
+
+      {/* Page counter */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 px-3 py-1 bg-black/40 rounded-full text-white/90 text-xs font-medium pointer-events-none">
+        {currentScene + 1} / {scenes.length}
       </div>
     </div>
   );

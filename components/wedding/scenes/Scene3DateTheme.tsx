@@ -120,7 +120,7 @@ END:VCALENDAR`;
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col items-center justify-start h-full px-6 pt-16 pb-24 text-center relative z-10 overflow-y-auto">
+      <div className="flex flex-col items-center justify-start h-full px-6 pt-16 pb-14 text-center relative z-10 overflow-y-auto">
         {/* Header with Date */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
