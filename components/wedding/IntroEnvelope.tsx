@@ -48,9 +48,16 @@ export default function IntroEnvelope({ onOpen }: IntroEnvelopeProps) {
       transition={{ duration: 0.8, ease: 'easeInOut' }}
       onClick={open}
     >
+      {/* Soft blurred envelope fills the sides on wide screens */}
+      <div
+        className="absolute inset-0 bg-cover bg-center blur-2xl scale-110 opacity-80"
+        style={{ backgroundImage: `url('${withBasePath('/intro/envelope-poster.jpg')}')` }}
+      />
+
+      {/* The video is portrait and low-res, so on wide screens show it upright instead of stretching it */}
       <video
         ref={videoRef}
-        className="w-full h-full object-cover"
+        className="relative w-full h-full object-cover landscape:object-contain"
         src={withBasePath('/intro/envelope.mp4')}
         poster={withBasePath('/intro/envelope-poster.jpg')}
         muted
