@@ -4,6 +4,7 @@ import { withBasePath } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/i18n';
 import { motion } from 'framer-motion';
+import { Heart } from 'lucide-react';
 
 interface SceneProps {
   onNext: () => void;
@@ -35,12 +36,15 @@ export default function Scene1Envelope({ onNext }: SceneProps) {
     }, 3000);
   };
 
-  // Generate consistent positions for petals
-  const petalPositions = Array.from({ length: 20 }, (_, i) => ({
-    initialX: (i * 37 + 123) % 400, // Deterministic but varied positions
-    finalX: (i * 43 + 89) % 400,
-    delay: (i * 0.1) % 2,
-    duration: 4 + (i % 3),
+  // Falling hearts, spread across the full width (deterministic to avoid hydration mismatch)
+  const hearts = Array.from({ length: 22 }, (_, i) => ({
+    left: (i * 37 + 7) % 100, // % of screen width
+    size: 10 + ((i * 7) % 4) * 4, // 10-22px
+    sway: i % 2 === 0 ? 20 : -20,
+    delay: (i * 0.45) % 6,
+    duration: 6 + (i % 4),
+    color: ['text-rose-400', 'text-pink-300', 'text-rose-500', 'text-red-400'][i % 4],
+    opacity: 0.55 + (i % 3) * 0.15,
   }));
 
   const handleBackgroundClick = (e: React.MouseEvent | React.TouchEvent) => {
@@ -62,30 +66,29 @@ export default function Scene1Envelope({ onNext }: SceneProps) {
     >
       {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40"></div>
-      {/* Floating petals - only render after mount to avoid hydration mismatch */}
+      {/* Falling hearts - only render after mount to avoid hydration mismatch */}
       {isMounted && (
-        <div className="absolute inset-0">
-          {petalPositions.map((petal, i) => (
+        <div className="absolute inset-0 pointer-events-none">
+          {hearts.map((heart, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-white/20 rounded-full"
-              initial={{
-                x: petal.initialX,
-                y: -10,
-                rotate: 0,
-              }}
+              className={`absolute top-0 ${heart.color}`}
+              style={{ left: `${heart.left}%`, opacity: heart.opacity }}
+              initial={{ y: -30, x: 0, rotate: -15 }}
               animate={{
-                y: (typeof window !== 'undefined' ? window.innerHeight : 800) + 10,
-                rotate: 360,
-                x: petal.finalX,
+                y: (typeof window !== 'undefined' ? window.innerHeight : 800) + 30,
+                x: [0, heart.sway, 0, -heart.sway, 0],
+                rotate: [-15, 15, -15],
               }}
               transition={{
-                duration: petal.duration,
+                duration: heart.duration,
                 repeat: Infinity,
                 ease: 'linear',
-                delay: petal.delay,
+                delay: heart.delay,
               }}
-            />
+            >
+              <Heart size={heart.size} fill="currentColor" strokeWidth={0} />
+            </motion.div>
           ))}
         </div>
       )}

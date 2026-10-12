@@ -89,6 +89,7 @@ const en = {
   },
   gallery: {
     heading: 'Our Journey to Forever',
+    close: 'Close',
     captions: [
       'Our story so far...',
       'Adventures together...',
@@ -193,6 +194,7 @@ const cs: Translations = {
   },
   gallery: {
     heading: 'Naše společná cesta',
+    close: 'Zavřít',
     captions: [
       'Náš dosavadní příběh...',
       'Společná dobrodružství...',
@@ -295,6 +297,7 @@ const tr: Translations = {
   },
   gallery: {
     heading: 'Sonsuzluğa Yolculuğumuz',
+    close: 'Kapat',
     captions: [
       'Bugüne kadarki hikayemiz...',
       'Birlikte maceralar...',

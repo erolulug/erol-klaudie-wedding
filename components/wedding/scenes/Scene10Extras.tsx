@@ -5,6 +5,8 @@ import { useLanguage } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { RotateCcw, Heart } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
+import PhotoLightbox from '../PhotoLightbox';
 
 interface SceneProps {
   onNext: () => void;
@@ -21,6 +23,7 @@ interface PhotoItem {
 
 export default function Scene10Extras({ isActive }: SceneProps) {
   const { t } = useLanguage();
+  const [openPhoto, setOpenPhoto] = useState<number | null>(null);
   // Static engagement photos
   const photos: PhotoItem[] = [
     { id: '1', src: '/images/IMG_3760.jpg', alt: 'Erol and Klaudie together 1', size: 'large' },
@@ -92,7 +95,12 @@ export default function Scene10Extras({ isActive }: SceneProps) {
                     delay: 0.1 * index,
                     ease: 'easeOut' 
                   }}
-                  className="relative group break-inside-avoid mb-4"
+                  className="relative group break-inside-avoid mb-4 cursor-zoom-in"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenPhoto(index);
+                  }}
+                  onTouchEnd={(e) => e.stopPropagation()}
                 >
                   <div className={`
                     relative rounded-xl shadow-lg border border-dusty-blue/20 overflow-hidden bg-white
@@ -158,6 +166,15 @@ export default function Scene10Extras({ isActive }: SceneProps) {
           ))}
         </div>
       </div>
+      <PhotoLightbox
+        photos={photos.map((photo, index) => ({
+          src: withBasePath(photo.src),
+          alt: photo.alt,
+          caption: t.gallery.captions[index],
+        }))}
+        index={openPhoto}
+        onChange={setOpenPhoto}
+      />
     </div>
   );
 }

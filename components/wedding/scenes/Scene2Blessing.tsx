@@ -61,22 +61,19 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
   }));
 
   return (
-    <div className="relative w-full h-full bg-gradient-to-b from-white to-beige overflow-hidden">
-      {/* Watercolor border effect */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-dusty-blue/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-dusty-blue/20 to-transparent" />
-        <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-dusty-blue/10 to-transparent" />
-        <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-dusty-blue/10 to-transparent" />
-      </div>
-
-      {/* Main content */}
-      <div className="flex flex-col items-center justify-center h-full px-8 text-center relative z-10">
+    <div
+      className="relative w-full h-full bg-cover bg-center overflow-hidden"
+      style={{ backgroundImage: `url('${withBasePath('/intro/lake-background.jpg')}')` }}
+    >
+      {/* Main content - scrolls on short phones */}
+      <div className="relative z-10 h-full overflow-y-auto">
+        <div className="flex flex-col items-center justify-center min-h-full px-8 pt-16 pb-14 text-center">
+        {/* Frosted panel keeps the text readable over the picture */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut' }}
-          className="max-w-md"
+          className="max-w-md bg-white/65 backdrop-blur-md rounded-3xl px-6 py-8 shadow-xl border border-white/60"
         >
           {/* Decorative element */}
           <motion.div
@@ -186,6 +183,7 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
             </motion.div>
           </motion.div>
         </motion.div>
+        </div>
 
         {/* Floating elements - only render after mount */}
         {isMounted && (

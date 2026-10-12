@@ -38,6 +38,14 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
   const [currentScene, setCurrentScene] = useState(0);
   // The story starts behind the envelope intro; music waits until it's opened
   const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
+  // "E & K" bursts that float up from a heart button when it's tapped
+  const [bursts, setBursts] = useState<{ id: number; side: 'left' | 'right' }[]>([]);
+
+  const celebrate = (side: 'left' | 'right') => {
+    const id = Date.now() + Math.random();
+    setBursts((prev) => [...prev, { id, side }]);
+    setTimeout(() => setBursts((prev) => prev.filter((b) => b.id !== id)), 1600);
+  };
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const touchStartRef = useRef<number>(0);
@@ -313,11 +321,42 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       </AnimatePresence>
 
 
+      {/* Initials floating up from the heart that was tapped */}
+      {bursts.map(({ id, side }) => (
+        <div
+          key={id}
+          className="absolute top-1/2 z-50 w-14 -mt-7 flex justify-center pointer-events-none"
+          style={side === 'left' ? { left: '0.5rem' } : { right: '0.5rem' }}
+        >
+          <motion.span
+            className="absolute font-script text-3xl text-white whitespace-nowrap [text-shadow:0_2px_8px_rgba(0,0,0,0.45)]"
+            // Nudge toward the middle so the text isn't cut off at the screen edge
+            initial={{ x: side === 'left' ? 24 : -24, y: 0, opacity: 0, scale: 0.6 }}
+            animate={{ x: side === 'left' ? 24 : -24, y: -90, opacity: [0, 1, 1, 0], scale: 1 }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
+          >
+            E &amp; K
+          </motion.span>
+          {[-18, 0, 18].map((dx, i) => (
+            <motion.span
+              key={i}
+              className="absolute text-rose-500"
+              initial={{ x: 0, y: 10, opacity: 0, scale: 0.5 }}
+              animate={{ x: dx, y: -55 - i * 12, opacity: [0, 1, 0], scale: 1 }}
+              transition={{ duration: 1.2, delay: 0.1 + i * 0.08, ease: 'easeOut' }}
+            >
+              <Heart size={12} fill="currentColor" strokeWidth={0} />
+            </motion.span>
+          ))}
+        </div>
+      ))}
+
       {/* Back / Next buttons, vertically centred on the sides */}
       {currentScene > 0 && (
         <button
           onClick={(e) => {
             e.stopPropagation();
+            celebrate('left');
             prevScene();
           }}
           onTouchEnd={(e) => e.stopPropagation()}
@@ -337,6 +376,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
+            celebrate('right');
             nextScene();
           }}
           onTouchEnd={(e) => e.stopPropagation()}
