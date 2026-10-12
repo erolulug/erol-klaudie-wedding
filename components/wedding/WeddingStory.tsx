@@ -1,9 +1,8 @@
 'use client';
 
 import { withBasePath } from '@/lib/utils';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSwipeable } from 'react-swipeable';
 import { Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import useSound from 'use-sound';
 import { useLanguage } from '@/lib/i18n';
@@ -48,8 +47,6 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
   };
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const touchStartRef = useRef<number>(0);
-  const lastInteractionRef = useRef<number>(0);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
   const [isAudioError, setIsAudioError] = useState(false);
 
@@ -117,10 +114,6 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
     }
   };
 
-  const goToScene = (index: number) => {
-    setCurrentScene(index);
-  };
-
   const restart = () => {
     setCurrentScene(0);
     setIsPlaying(true);
@@ -134,96 +127,6 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
     setIsMuted(!isMuted);
   };
 
-  // Touch handlers for navigation
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartRef.current = Date.now();
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const now = Date.now();
-    const touchDuration = now - touchStartRef.current;
-    const touch = e.changedTouches[0];
-    
-    if (!touch) return; // Safety check
-    
-    // Prevent double triggering within 500ms
-    if (now - lastInteractionRef.current < 500) {
-      console.log('Interaction too soon, ignoring');
-      return;
-    }
-    
-    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400;
-    const tapX = touch.clientX;
-
-    // Quick tap detection (less than 300ms)
-    if (touchDuration < 300) {
-      console.log('Tap detected at:', tapX, 'Screen width:', screenWidth);
-      lastInteractionRef.current = now;
-      
-      if (tapX < screenWidth / 2) {
-        console.log('Previous scene');
-        prevScene(); // Left half - previous
-      } else {
-        console.log('Next scene');
-        nextScene(); // Right half - next
-      }
-    }
-  };
-
-  // Click handlers for desktop
-  const handleClick = (e: React.MouseEvent) => {
-    const now = Date.now();
-    
-    // Prevent double triggering within 500ms
-    if (now - lastInteractionRef.current < 500) {
-      console.log('Click too soon, ignoring');
-      return;
-    }
-    
-    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 400;
-    const clickX = e.clientX;
-    
-    lastInteractionRef.current = now;
-    
-    if (clickX < screenWidth / 2) {
-      prevScene(); // Left half - previous
-    } else {
-      nextScene(); // Right half - next
-    }
-  };
-
-  // Swipe handlers with debouncing
-  const handleSwipeLeft = () => {
-    const now = Date.now();
-    if (now - lastInteractionRef.current < 500) {
-      console.log('Swipe left too soon, ignoring');
-      return;
-    }
-    lastInteractionRef.current = now;
-    console.log('Swipe left detected');
-    nextScene();
-  };
-
-  const handleSwipeRight = () => {
-    const now = Date.now();
-    if (now - lastInteractionRef.current < 500) {
-      console.log('Swipe right too soon, ignoring');
-      return;
-    }
-    lastInteractionRef.current = now;
-    console.log('Swipe right detected');
-    prevScene();
-  };
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: handleSwipeLeft,
-    onSwipedRight: handleSwipeRight,
-    preventScrollOnSwipe: true,
-    trackMouse: false, // Disable mouse tracking to prevent conflicts
-    swipeDuration: 500,
-    touchEventOptions: { passive: false },
-  });
-
   const CurrentSceneComponent = scenes[currentScene];
 
   return (
@@ -232,23 +135,14 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       {!isEnvelopeOpened && <IntroEnvelope onOpen={() => setIsEnvelopeOpened(true)} />}
     </AnimatePresence>
 
-    <div 
-      className="relative w-full h-screen bg-black overflow-hidden"
-      {...swipeHandlers}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onClick={handleClick}
-    >
-      {/* Progress bars */}
-      <div className="absolute top-4 left-4 right-4 z-50 flex gap-1 drop-shadow-[0_0_2px_rgba(0,0,0,0.35)]">
+    {/* Pages change only with the Back / Next heart buttons */}
+    <div className="relative w-full h-screen bg-black overflow-hidden">
+      {/* Progress bars (display only) */}
+      <div className="absolute top-4 left-4 right-4 z-50 flex gap-1 drop-shadow-[0_0_2px_rgba(0,0,0,0.35)] pointer-events-none">
         {scenes.map((_, index) => (
           <div
             key={index}
-            className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              goToScene(index);
-            }}
+            className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden"
           >
             <div
               className="h-full bg-white transition-all duration-100 ease-linear"

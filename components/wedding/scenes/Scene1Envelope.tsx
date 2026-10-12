@@ -3,7 +3,7 @@
 import { withBasePath } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/i18n';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
 
 interface SceneProps {
@@ -22,29 +22,13 @@ const textItem = {
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
 };
 
-export default function Scene1Envelope({ onNext }: SceneProps) {
+export default function Scene1Envelope(_props: SceneProps) {
   const { t } = useLanguage();
-  const [isOpened, setIsOpened] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const handleCardClick = (e: React.MouseEvent | React.TouchEvent) => {
-    e.stopPropagation(); // Prevent event bubbling to parent container
-
-    if (isProcessing || isOpened) return; // Prevent double clicks
-
-    setIsProcessing(true);
-    setIsOpened(true);
-
-    // Proceed to next scene after opening animation completes
-    setTimeout(() => {
-      onNext();
-    }, 3000);
-  };
 
   // Falling hearts, spread across the full width (deterministic to avoid hydration mismatch)
   const hearts = Array.from({ length: 22 }, (_, i) => ({
@@ -58,11 +42,7 @@ export default function Scene1Envelope({ onNext }: SceneProps) {
   }));
 
   return (
-    <div
-      className="relative w-full h-full overflow-hidden bg-[#fcfbf9] cursor-pointer"
-      onClick={handleCardClick}
-      onTouchEnd={handleCardClick}
-    >
+    <div className="relative w-full h-full overflow-hidden bg-[#fcfbf9]">
       {/* Soft warm glow behind the frame */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,244,228,0.9)_0%,_rgba(252,251,249,0)_65%)]" />
 
@@ -198,115 +178,56 @@ export default function Scene1Envelope({ onNext }: SceneProps) {
             className="absolute flex flex-col items-center justify-center text-center text-[#5a5a5a]"
             style={{ left: '18%', right: '18%', top: '19%', bottom: '10%' }}
           >
-            <AnimatePresence mode="wait">
-              {!isOpened ? (
-                <motion.div
-                  key="invitation"
-                  className="flex flex-col items-center w-full"
-                  variants={textBlock}
-                  initial="hidden"
-                  animate="show"
-                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.4 } }}
+              <motion.div
+                className="flex flex-col items-center w-full"
+                variants={textBlock}
+                initial="hidden"
+                animate="show"
+              >
+                <motion.p
+                  variants={textItem}
+                  className="font-body uppercase text-[#7a7a7a] leading-snug"
+                  style={{ fontSize: '3.4cqw', letterSpacing: '0.16em', maxWidth: '40cqw' }}
                 >
-                  <motion.p
-                    variants={textItem}
-                    className="font-body uppercase text-[#7a7a7a] leading-snug"
-                    style={{ fontSize: '3.4cqw', letterSpacing: '0.16em', maxWidth: '40cqw' }}
-                  >
-                    {t.envelope.invited}
-                  </motion.p>
+                  {t.envelope.invited}
+                </motion.p>
 
-                  <motion.h2 variants={textItem} className="font-script leading-none mt-[3.7cqw]" style={{ fontSize: '16cqw' }}>
-                    Erol
-                  </motion.h2>
+                <motion.h2 variants={textItem} className="font-script leading-none mt-[3.7cqw]" style={{ fontSize: '16cqw' }}>
+                  Erol
+                </motion.h2>
 
-                  <motion.div variants={textItem} className="flex items-center w-full gap-[2.5cqw] my-[0.6cqw]">
-                    <motion.span
-                      className="flex-1 h-px bg-[#8a8a8a] origin-right"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: 1, delay: 1.8, ease: 'easeOut' }}
-                    />
-                    <span className="font-script text-[#6a6a6a]" style={{ fontSize: '6.8cqw' }}>
-                      {t.envelope.and}
-                    </span>
-                    <motion.span
-                      className="flex-1 h-px bg-[#8a8a8a] origin-left"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: 1, delay: 1.8, ease: 'easeOut' }}
-                    />
-                  </motion.div>
-
-                  <motion.h2 variants={textItem} className="font-script leading-none" style={{ fontSize: '16cqw' }}>
-                    Klaudie
-                  </motion.h2>
-
-                  <motion.p
-                    variants={textItem}
-                    className="font-serif font-bold uppercase mt-[5cqw]"
-                    style={{ fontSize: '4.4cqw', letterSpacing: '0.16em' }}
-                  >
-                    {t.envelope.date}
-                  </motion.p>
-
-                  <motion.p
-                    variants={textItem}
-                    className="font-body uppercase text-[#8a8a8a] mt-[1.9cqw]"
-                    style={{ fontSize: '3.2cqw', letterSpacing: '0.18em' }}
-                  >
-                    <motion.span
-                      className="inline-block"
-                      animate={{ opacity: [0.45, 1, 0.45] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-                    >
-                      {t.envelope.tapToOpen}
-                    </motion.span>
-                  </motion.p>
+                <motion.div variants={textItem} className="flex items-center w-full gap-[2.5cqw] my-[0.6cqw]">
+                  <motion.span
+                    className="flex-1 h-px bg-[#8a8a8a] origin-right"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 1, delay: 1.8, ease: 'easeOut' }}
+                  />
+                  <span className="font-script text-[#6a6a6a]" style={{ fontSize: '6.8cqw' }}>
+                    {t.envelope.and}
+                  </span>
+                  <motion.span
+                    className="flex-1 h-px bg-[#8a8a8a] origin-left"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 1, delay: 1.8, ease: 'easeOut' }}
+                  />
                 </motion.div>
-              ) : (
-                <motion.div
-                  key="welcome"
-                  className="flex flex-col items-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
+
+                <motion.h2 variants={textItem} className="font-script leading-none" style={{ fontSize: '16cqw' }}>
+                  Klaudie
+                </motion.h2>
+
+                <motion.p
+                  variants={textItem}
+                  className="font-serif font-bold uppercase mt-[5cqw]"
+                  style={{ fontSize: '4.4cqw', letterSpacing: '0.16em' }}
                 >
-                  <h2 className="font-script leading-tight" style={{ fontSize: '11cqw' }}>
-                    {t.envelope.welcome}
-                  </h2>
-                  <p className="font-body text-[#7a7a7a] mt-[3cqw]" style={{ fontSize: '4cqw' }}>
-                    {t.envelope.unfold}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {t.envelope.date}
+                </motion.p>
+              </motion.div>
           </div>
 
-          {/* Sparkles burst out of the frame when it's opened */}
-          {isOpened && (
-            <div className="absolute inset-0">
-              {[...Array(10)].map((_, i) => {
-                const angle = (i * 36 * Math.PI) / 180;
-                return (
-                  <motion.div
-                    key={i}
-                    className="absolute left-1/2 top-1/2 text-rose-400"
-                    initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
-                    animate={{
-                      x: `${Math.cos(angle) * 45}cqw`,
-                      y: `${Math.sin(angle) * 45}cqw`,
-                      scale: [0, 1.2, 0],
-                      opacity: [0, 1, 0],
-                    }}
-                    transition={{ duration: 1.8, delay: 0.3 + i * 0.06, ease: 'easeOut' }}
-                  >
-                    <Heart size={18} fill="currentColor" strokeWidth={0} />
-                  </motion.div>
-                );
-              })}
-            </div>
-          )}
         </motion.div>
         </motion.div>
       </div>
