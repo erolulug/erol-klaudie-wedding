@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { withBasePath } from '@/lib/utils';
 import LanguageSwitcher from './LanguageSwitcher';
+import WaxSeal from './WaxSeal';
 
 interface IntroEnvelopeProps {
   onOpen: () => void;
@@ -68,16 +69,31 @@ export default function IntroEnvelope({ onOpen }: IntroEnvelopeProps) {
 
       <LanguageSwitcher className="absolute top-8 left-4" />
 
+      {/* Champagne wax seal where the flaps meet (centre of the envelope); it lifts away when opened */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          className="absolute left-1/2 top-[50.7%]"
+          style={{ width: 'min(30vw, 17vh)', aspectRatio: '1', marginLeft: 'calc(min(30vw, 17vh) / -2)', marginTop: 'calc(min(30vw, 17vh) / -2)' }}
+          initial={{ opacity: 0, scale: 1.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.3, 1.4, 0.5, 1], delay: 0.3 }}
+        >
+          <WaxSeal lifted={isOpening} className="w-full h-full" />
+        </motion.div>
+      </div>
+
       {!isOpening && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-x-0 top-[50.7%] flex justify-center pointer-events-none" style={{ marginTop: 'calc(min(30vw, 17vh) / 2 + 1.75rem)' }}>
           <motion.button
-            className="pointer-events-auto px-8 py-3.5 rounded-full bg-white/75 backdrop-blur-md border border-[#d4bb98]/80 text-[#4a3e35] font-serif text-lg tracking-wider shadow-xl whitespace-nowrap"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: [1, 1.05, 1] }}
+            className="pointer-events-auto px-7 py-3 rounded-full bg-white/75 backdrop-blur-md border border-[#d4bb98]/80 text-[#4a3e35] font-serif text-lg tracking-wider shadow-xl whitespace-nowrap"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0, scale: [1, 1.04, 1] }}
             transition={{
-              opacity: { duration: 0.6 },
-              scale: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+              opacity: { duration: 0.6, delay: 0.8 },
+              y: { duration: 0.6, delay: 0.8 },
+              scale: { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 1.4 },
             }}
+            exit={{ opacity: 0 }}
             onClick={(e) => {
               e.stopPropagation();
               open();
