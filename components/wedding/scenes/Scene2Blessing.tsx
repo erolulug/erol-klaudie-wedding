@@ -66,14 +66,14 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
       style={{ backgroundImage: `url('${withBasePath('/intro/lake-background.jpg')}')` }}
     >
       {/* Main content - scrolls on short phones */}
-      <div className="relative z-10 h-full overflow-y-auto">
-        <div className="flex flex-col items-center justify-center min-h-full px-8 pt-16 pb-14 text-center">
+      <div className="relative z-10 h-full overflow-y-auto overflow-x-hidden">
+        <div className="flex flex-col items-center justify-center min-h-full px-4 sm:px-8 pt-16 pb-14 text-center">
         {/* Frosted panel keeps the text readable over the picture */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut' }}
-          className="max-w-md bg-white/65 backdrop-blur-md rounded-3xl px-6 py-8 shadow-xl border border-white/60"
+          className="max-w-md bg-white/65 backdrop-blur-md rounded-3xl px-4 sm:px-6 py-8 shadow-xl border border-white/60"
         >
           {/* Decorative element */}
           <motion.div
@@ -146,38 +146,38 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
               className="text-center mt-8"
             >
               <h3 className="typography-formal text-lg text-gray-600 mb-4">{t.blessing.seeYouIn}</h3>
-              <div className="grid grid-cols-4 gap-4 max-w-sm mx-auto">
+              <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-sm mx-auto">
                 <motion.div 
-                  className="bg-white/80 rounded-lg p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0 }}
                 >
-                  <div className="typography-heading text-2xl text-dusty-blue">{timeLeft.days}</div>
-                  <div className="typography-caption text-gray-600">{t.blessing.days}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.days}</div>
+                  <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.days}</div>
                 </motion.div>
                 <motion.div 
-                  className="bg-white/80 rounded-lg p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0.25 }}
                 >
-                  <div className="typography-heading text-2xl text-dusty-blue">{timeLeft.hours}</div>
-                  <div className="typography-caption text-gray-600">{t.blessing.hours}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.hours}</div>
+                  <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.hours}</div>
                 </motion.div>
                 <motion.div 
-                  className="bg-white/80 rounded-lg p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
                 >
-                  <div className="typography-heading text-2xl text-dusty-blue">{timeLeft.minutes}</div>
-                  <div className="typography-caption text-gray-600">{t.blessing.minutes}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.minutes}</div>
+                  <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.minutes}</div>
                 </motion.div>
                 <motion.div 
-                  className="bg-white/80 rounded-lg p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0.75 }}
                 >
-                  <div className="typography-heading text-2xl text-dusty-blue">{timeLeft.seconds}</div>
-                  <div className="typography-caption text-gray-600">{t.blessing.seconds}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.seconds}</div>
+                  <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.seconds}</div>
                 </motion.div>
               </div>
             </motion.div>

@@ -240,7 +240,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       onClick={handleClick}
     >
       {/* Progress bars */}
-      <div className="absolute top-4 left-4 right-4 z-50 flex gap-1">
+      <div className="absolute top-4 left-4 right-4 z-50 flex gap-1 drop-shadow-[0_0_2px_rgba(0,0,0,0.35)]">
         {scenes.map((_, index) => (
           <div
             key={index}

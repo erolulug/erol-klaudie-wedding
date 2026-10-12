@@ -28,6 +28,7 @@ const en = {
   envelope: {
     title: 'Wedding Invitation',
     invited: 'You are cordially invited to celebrate',
+    and: 'and',
     date: '14 August 2027',
     tapToOpen: 'Tap to open',
     welcome: 'Welcome to our story...',
@@ -133,6 +134,7 @@ const cs: Translations = {
   envelope: {
     title: 'Svatební pozvánka',
     invited: 'Srdečně vás zveme na svatbu',
+    and: 'a',
     date: '14. srpna 2027',
     tapToOpen: 'Klepnutím otevřete',
     welcome: 'Vítejte v našem příběhu...',
@@ -235,7 +237,8 @@ const tr: Translations = {
   },
   envelope: {
     title: 'Düğün Davetiyesi',
-    invited: 'Mutluluğumuzu paylaşmaya davetlisiniz',
+    invited: 'Düğünümüze davetlisiniz',
+    and: 've',
     date: '14 Ağustos 2027',
     tapToOpen: 'Açmak için dokunun',
     welcome: 'Hikayemize hoş geldiniz...',
