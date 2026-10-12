@@ -346,7 +346,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
           aria-label={t.story.back}
         >
           <Heart
-            className="absolute inset-0 w-full h-full text-white/70 fill-black/40 group-hover:fill-black/60 transition-colors"
+            className="absolute inset-0 w-full h-full text-white/80 fill-rose-500/50 group-hover:fill-rose-500/80 transition-colors"
             strokeWidth={1.5}
           />
           <ChevronLeft size={22} strokeWidth={2.5} className="relative -mt-1" />
@@ -369,7 +369,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
           whileHover={{ scale: 1.15 }}
         >
           <Heart
-            className="absolute inset-0 w-full h-full text-white fill-[#5B82AB] group-hover:fill-[#4A6F96] transition-colors"
+            className="absolute inset-0 w-full h-full text-white fill-rose-500 group-hover:fill-rose-600 transition-colors"
             strokeWidth={1.5}
           />
           <ChevronRight size={22} strokeWidth={2.5} className="relative -mt-1" />
