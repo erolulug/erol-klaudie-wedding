@@ -10,6 +10,7 @@ export const languages: { code: Language; label: string; name: string }[] = [
   { code: 'en', label: 'EN', name: 'English' },
 ];
 
+// Used only when rendering on the server, before the guest's region is known
 export const defaultLanguage: Language = 'cs';
 
 const en = {
@@ -337,6 +338,42 @@ export const greetings: Record<Language, string> = {
 
 const STORAGE_KEY = 'wedding-language';
 
+// Guess the guest's language from where they are: Turkey → Turkish, Czechia → Czech,
+// everyone else → English. Uses the device's time zone (no data leaves the device),
+// falling back to the device language for guests travelling abroad.
+export function detectLanguage(): Language {
+  try {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timeZone === 'Europe/Istanbul' || timeZone === 'Asia/Istanbul') return 'tr';
+    if (timeZone === 'Europe/Prague') return 'cs';
+  } catch {
+    // Older browsers without Intl time zones - fall through to the device language
+  }
+
+  if (typeof navigator !== 'undefined') {
+    const preferred = navigator.languages?.length ? navigator.languages : [navigator.language];
+    for (const tag of preferred) {
+      const code = tag?.toLowerCase().slice(0, 2);
+      if (code === 'tr') return 'tr';
+      // Slovak speakers read Czech comfortably
+      if (code === 'cs' || code === 'sk') return 'cs';
+    }
+  }
+
+  return 'en';
+}
+
+function initialLanguage(): Language {
+  if (typeof window === 'undefined') return defaultLanguage;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY) as Language | null;
+    if (saved && saved in translations) return saved;
+  } catch {
+    // Storage unavailable (private mode etc.)
+  }
+  return detectLanguage();
+}
+
 interface LanguageContextValue {
   language: Language;
   setLanguage: (language: Language) => void;
@@ -346,17 +383,9 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(defaultLanguage);
-
-  // Restore the guest's previous choice
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY) as Language | null;
-      if (saved && saved in translations) setLanguageState(saved);
-    } catch {
-      // Storage unavailable (private mode etc.) - keep the default
-    }
-  }, []);
+  // A language the guest picked before wins; otherwise guess from their region.
+  // The provider renders no text of its own, so the server/client difference is safe.
+  const [language, setLanguageState] = useState<Language>(initialLanguage);
 
   useEffect(() => {
     document.documentElement.lang = language;
