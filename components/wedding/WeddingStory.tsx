@@ -4,7 +4,7 @@ import { withBasePath } from '@/lib/utils';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
-import { Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import useSound from 'use-sound';
 import { useLanguage, languages } from '@/lib/i18n';
 
@@ -27,9 +27,6 @@ const scenes = [
   Scene10RSVP,
 ];
 
-// Scenes that should not auto-advance (0-indexed)
-const noAutoAdvanceScenes = [0, 6]; // Scene1Envelope and Scene10RSVP
-
 interface WeddingStoryProps {
   onComplete?: () => void;
 }
@@ -39,8 +36,6 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
   const [currentScene, setCurrentScene] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const progressRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartRef = useRef<number>(0);
   const lastInteractionRef = useRef<number>(0);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
@@ -70,48 +65,6 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       onComplete();
     }
   }, [currentScene, onComplete]);
-
-  // Auto-advance timer
-  useEffect(() => {
-    if (!isPlaying || noAutoAdvanceScenes.includes(currentScene)) return;
-
-    const timer = setTimeout(() => {
-      nextScene();
-    }, 30000); // 30 seconds per scene
-
-    return () => clearTimeout(timer);
-  }, [currentScene, isPlaying, nextScene]);
-
-  // Progress bar animation
-  useEffect(() => {
-    if (!isPlaying || noAutoAdvanceScenes.includes(currentScene)) {
-      // For non-auto-advance scenes, set progress to 0 and don't animate
-      setProgress(0);
-      return;
-    }
-
-    setProgress(0);
-    const startTime = Date.now();
-    const duration = 30000;
-
-    const updateProgress = () => {
-      const elapsed = Date.now() - startTime;
-      const newProgress = Math.min((elapsed / duration) * 100, 100);
-      setProgress(newProgress);
-
-      if (newProgress < 100) {
-        progressRef.current = setTimeout(updateProgress, 50);
-      }
-    };
-
-    updateProgress();
-
-    return () => {
-      if (progressRef.current) {
-        clearTimeout(progressRef.current);
-      }
-    };
-  }, [currentScene, isPlaying]);
 
   // Audio control - only play when audio is loaded
   useEffect(() => {
@@ -290,10 +243,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
           >
             <div
               className="h-full bg-white transition-all duration-100 ease-linear"
-              style={{
-                width: index < currentScene ? '100%' : 
-                       index === currentScene ? `${progress}%` : '0%'
-              }}
+              style={{ width: index <= currentScene ? '100%' : '0%' }}
             />
           </div>
         ))}
@@ -383,9 +333,35 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       </AnimatePresence>
 
 
-      {/* Navigation hints */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-50 text-white/70 text-sm text-center">
-        <p className="font-body">{t.story.navHint}</p>
+      {/* Back / Next buttons */}
+      <div
+        className="absolute bottom-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none"
+        onClick={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={prevScene}
+          className={`pointer-events-auto flex items-center gap-1 pl-3 pr-4 py-2 bg-black/50 hover:bg-black/70 rounded-full text-white text-sm font-medium transition-colors ${
+            currentScene === 0 ? 'invisible' : ''
+          }`}
+        >
+          <ChevronLeft size={18} />
+          {t.story.back}
+        </button>
+
+        <span className="px-3 py-1 bg-black/50 rounded-full text-white/90 text-xs font-medium">
+          {currentScene + 1} / {scenes.length}
+        </span>
+
+        <button
+          onClick={nextScene}
+          className={`pointer-events-auto flex items-center gap-1 pl-4 pr-3 py-2 bg-white/90 hover:bg-white rounded-full text-gray-900 text-sm font-medium shadow-lg transition-colors ${
+            currentScene === scenes.length - 1 ? 'invisible' : ''
+          }`}
+        >
+          {t.story.next}
+          <ChevronRight size={18} />
+        </button>
       </div>
     </div>
   );

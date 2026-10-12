@@ -14,7 +14,8 @@ export const defaultLanguage: Language = 'cs';
 
 const en = {
   story: {
-    navHint: 'Tap sides to navigate • Swipe to change scenes',
+    back: 'Back',
+    next: 'Next',
     musicLoading: 'Loading music...',
     musicError: 'Music failed to load',
     unmute: 'Unmute music',
@@ -114,7 +115,8 @@ export type Translations = typeof en;
 
 const cs: Translations = {
   story: {
-    navHint: 'Klepněte na okraj pro přechod • Přejeďte prstem pro změnu scény',
+    back: 'Zpět',
+    next: 'Další',
     musicLoading: 'Načítání hudby...',
     musicError: 'Hudbu se nepodařilo načíst',
     unmute: 'Zapnout hudbu',
@@ -212,7 +214,8 @@ const cs: Translations = {
 
 const tr: Translations = {
   story: {
-    navHint: 'Gezinmek için kenarlara dokunun • Sahne değiştirmek için kaydırın',
+    back: 'Geri',
+    next: 'İleri',
     musicLoading: 'Müzik yükleniyor...',
     musicError: 'Müzik yüklenemedi',
     unmute: 'Müziği aç',

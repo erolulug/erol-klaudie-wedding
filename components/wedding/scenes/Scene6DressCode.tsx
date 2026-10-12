@@ -47,7 +47,7 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
 
       {/* Main content */}
       <div className="relative z-10 h-full overflow-y-auto">
-        <div className="flex flex-col items-center justify-start min-h-full px-8 pt-16 pb-8 text-center">
+        <div className="flex flex-col items-center justify-start min-h-full px-8 pt-16 pb-24 text-center">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}

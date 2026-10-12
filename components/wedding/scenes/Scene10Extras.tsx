@@ -54,7 +54,7 @@ export default function Scene10Extras({ isActive }: SceneProps) {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col items-center justify-start h-full px-6 pt-16 pb-8 relative z-10 overflow-y-auto">
+      <div className="flex flex-col items-center justify-start h-full px-6 pt-16 pb-24 relative z-10 overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
