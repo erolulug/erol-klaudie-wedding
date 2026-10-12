@@ -6,7 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 import { Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import useSound from 'use-sound';
-import { useLanguage, languages } from '@/lib/i18n';
+import { useLanguage } from '@/lib/i18n';
+import IntroEnvelope from './IntroEnvelope';
+import LanguageSwitcher from './LanguageSwitcher';
 
 // Import scene components
 import Scene1Envelope from './scenes/Scene1Envelope';
@@ -32,8 +34,10 @@ interface WeddingStoryProps {
 }
 
 export default function WeddingStory({ onComplete }: WeddingStoryProps) {
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const [currentScene, setCurrentScene] = useState(0);
+  // The story starts behind the envelope intro; music waits until it's opened
+  const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const touchStartRef = useRef<number>(0);
@@ -73,7 +77,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       return;
     }
 
-    if (!isMuted && isPlaying) {
+    if (!isMuted && isPlaying && isEnvelopeOpened) {
       console.log('Starting music playback');
       play();
     } else {
@@ -87,15 +91,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
         stop();
       }
     };
-  }, [isMuted, isPlaying, isAudioLoaded, isAudioError, play, pause, sound, stop]);
-
-  // Auto-start music when loaded (if not muted)
-  useEffect(() => {
-    if (isAudioLoaded && !isMuted && isPlaying) {
-      console.log('Audio loaded, auto-starting music');
-      play();
-    }
-  }, [isAudioLoaded, isMuted, isPlaying, play]);
+  }, [isMuted, isPlaying, isEnvelopeOpened, isAudioLoaded, isAudioError, play, pause, sound, stop]);
 
   // Cleanup on component unmount
   useEffect(() => {
@@ -223,6 +219,11 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
   const CurrentSceneComponent = scenes[currentScene];
 
   return (
+    <>
+    <AnimatePresence>
+      {!isEnvelopeOpened && <IntroEnvelope onOpen={() => setIsEnvelopeOpened(true)} />}
+    </AnimatePresence>
+
     <div 
       className="relative w-full h-screen bg-black overflow-hidden"
       {...swipeHandlers}
@@ -278,28 +279,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       </button>
 
       {/* Language switcher */}
-      <div
-        className="absolute top-8 left-4 z-50 flex bg-black/50 rounded-full p-0.5"
-        role="group"
-        aria-label={t.story.language}
-        onClick={(e) => e.stopPropagation()}
-        onTouchEnd={(e) => e.stopPropagation()}
-      >
-        {languages.map(({ code, label, name }) => (
-          <button
-            key={code}
-            onClick={() => setLanguage(code)}
-            className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-              language === code ? 'bg-white text-gray-900' : 'text-white hover:bg-white/20'
-            }`}
-            title={name}
-            lang={code}
-            aria-pressed={language === code}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <LanguageSwitcher className="absolute top-8 left-4 z-50" />
 
       {/* Restart button (shown on last scene) */}
       {currentScene === scenes.length - 1 && (
@@ -381,5 +361,6 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
         {currentScene + 1} / {scenes.length}
       </div>
     </div>
+    </>
   );
 }

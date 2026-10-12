@@ -22,6 +22,9 @@ const en = {
     mute: 'Mute music',
     language: 'Language',
   },
+  intro: {
+    open: 'Open Invitation',
+  },
   envelope: {
     title: 'Wedding Invitation',
     invited: 'You are cordially invited to celebrate',
@@ -123,6 +126,9 @@ const cs: Translations = {
     mute: 'Ztlumit hudbu',
     language: 'Jazyk',
   },
+  intro: {
+    open: 'Otevřít pozvánku',
+  },
   envelope: {
     title: 'Svatební pozvánka',
     invited: 'Srdečně vás zveme na svatbu',
@@ -221,6 +227,9 @@ const tr: Translations = {
     unmute: 'Müziği aç',
     mute: 'Müziği kapat',
     language: 'Dil',
+  },
+  intro: {
+    open: 'Davetiyeyi Aç',
   },
   envelope: {
     title: 'Düğün Davetiyesi',
