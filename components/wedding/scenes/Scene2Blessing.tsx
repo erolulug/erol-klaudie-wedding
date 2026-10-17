@@ -2,8 +2,10 @@
 
 import { withBasePath } from '@/lib/utils';
 import { useState, useEffect } from 'react';
-import { useLanguage, languages, greetings } from '@/lib/i18n';
+import { useLanguage, greetings } from '@/lib/i18n';
 import { motion } from 'framer-motion';
+import { Heart } from 'lucide-react';
+import SaveTheDateCalendar from '../SaveTheDateCalendar';
 
 interface SceneProps {
   onNext: () => void;
@@ -68,26 +70,30 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
       {/* Main content - scrolls on short phones */}
       <div className="relative z-10 h-full overflow-y-auto overflow-x-hidden">
         <div className="flex flex-col items-center justify-center min-h-full px-4 sm:px-8 pt-16 pb-14 text-center">
-        {/* Frosted panel keeps the text readable over the picture */}
+        {/* See-through panel; the white glow on the text keeps it readable over the picture */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut' }}
-          className="max-w-md bg-white/65 backdrop-blur-md rounded-3xl px-4 sm:px-6 py-8 shadow-xl border border-white/60"
+          className="max-w-md bg-white/35 rounded-3xl px-4 sm:px-6 py-8 border border-white/40 [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_2px_rgba(255,255,255,0.95)]"
         >
-          {/* Decorative element */}
+          {/* Monogram: E ♥ K */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
             className="mb-8"
           >
-            <div className="mb-4 flex justify-center">
-              <img 
-                src={withBasePath("/images/illustrations/hand-drawn-one-line-art-illustration copy.png")} 
-                alt="Decorative flower illustration"
-                className="w-38 h-38 object-contain"
-              />
+            <div className="mb-5 flex items-center justify-center gap-4 font-script text-6xl text-dusty-blue leading-none">
+              <span>E</span>
+              <motion.span
+                animate={{ scale: [1, 1.18, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-rose-500 drop-shadow-sm"
+              >
+                <Heart size={36} fill="currentColor" strokeWidth={0} />
+              </motion.span>
+              <span>K</span>
             </div>
             <div className="w-24 h-px bg-dusty-blue mx-auto mb-4" />
           </motion.div>
@@ -99,43 +105,30 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="space-y-6"
           >
-            <p className="typography-body text-xl text-gray-700 leading-relaxed">
+            <p className="font-body text-lg sm:text-2xl text-gray-700 leading-relaxed text-justify hyphens-none">
              {t.blessing.text}
             </p>
 
-            {/* Invitation line in the other languages */}
+            {/* Invitation line in the guest's language */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.2 }}
               className="border-t border-b border-dusty-blue/30 py-4 my-6"
             >
-              {languages.filter(({ code }) => code !== language).map(({ code }) => (
-                <p key={code} lang={code} className="typography-body italic text-dusty-blue">
-                  {greetings[code]}
-                </p>
-              ))}
+              <p className="font-body italic text-lg sm:text-xl leading-relaxed text-[#3f6189]">
+                {greetings[language]}
+              </p>
        
             </motion.div>
 
-            {/* Initials with heart */}
+            {/* Save-the-date calendar */}
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 1, delay: 1.5, ease: 'easeOut' }}
-              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 1.5, ease: 'easeOut' }}
             >
-              <div className="inline-flex items-center space-x-3 text-3xl font-script text-dusty-blue">
-                <span>E</span>
-                <motion.span
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                  className="text-red-400"
-                >
-                  💙
-                </motion.span>
-                <span>K</span>
-              </div>
+              <SaveTheDateCalendar />
             </motion.div>
 
             {/* Countdown Timer */}

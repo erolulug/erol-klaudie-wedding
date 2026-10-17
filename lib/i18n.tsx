@@ -48,6 +48,8 @@ const en = {
     weekday: 'Saturday',
     day: '14',
     month: 'August',
+    monthName: 'August',
+    weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     year: '2027',
     country: 'Czechia',
     openMap: 'Open in Google Maps',
@@ -154,6 +156,8 @@ const cs: Translations = {
     weekday: 'Sobota',
     day: '14.',
     month: 'srpna',
+    monthName: 'Srpen',
+    weekdays: ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'],
     year: '2027',
     country: 'Česko',
     openMap: 'Otevřít v Mapách Google',
@@ -258,6 +262,8 @@ const tr: Translations = {
     weekday: 'Cumartesi',
     day: '14',
     month: 'Ağustos',
+    monthName: 'Ağustos',
+    weekdays: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
     year: '2027',
     country: 'Çekya',
     openMap: "Google Haritalar'da aç",
@@ -329,7 +335,7 @@ const tr: Translations = {
 
 const translations: Record<Language, Translations> = { cs, tr, en };
 
-// The invitation line shown in the other languages, as a bilingual touch
+// Short invitation line shown under the main text, in the guest's language
 export const greetings: Record<Language, string> = {
   cs: 'Srdečně vás zveme na naši svatbu.',
   tr: 'Sizi düğünümüze içtenlikle davet ediyoruz.',

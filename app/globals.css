@@ -6,12 +6,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Playfair Display', serif;
   --font-mono: var(--font-geist-mono);
   --font-script: 'Great Vibes', cursive;
   --font-serif: 'Playfair Display', serif;
-  --font-decorative: 'Cinzel Decorative', serif;
-  --font-body: 'Nunito', sans-serif;
+  --font-decorative: 'Playfair Display', serif;
+  --font-body: 'Playfair Display', serif;
   --color-dusty-blue: #A3BFD9;
   --color-silver: #C5C6C7;
   --color-beige: #EAE6E1;
@@ -131,7 +131,7 @@
 @layer utilities {
   /* Typography System - Consistent Font Usage */
   
-  /* PRIMARY HEADINGS - Cinzel Decorative for main titles */
+  /* PRIMARY HEADINGS - Playfair Display (one font for all text; script only for names) */
   .font-decorative {
     font-family: var(--font-decorative);
   }
@@ -146,7 +146,7 @@
     font-family: var(--font-serif);
   }
   
-  /* BODY TEXT - Nunito for descriptions, UI, forms */
+  /* BODY TEXT - Playfair Display */
   .font-body {
     font-family: var(--font-body);
   }

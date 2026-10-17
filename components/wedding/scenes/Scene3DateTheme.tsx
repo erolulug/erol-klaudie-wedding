@@ -1,5 +1,6 @@
 'use client';
 
+import { withBasePath } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { Clock, Sun, Church, Users, Moon, Calendar, Download, Phone, MapPin } from 'lucide-react';
@@ -109,18 +110,17 @@ END:VCALENDAR`;
   };
   return (
     <motion.div 
-      className="relative w-full h-full overflow-hidden"
-      initial={{ background: 'linear-gradient(to bottom right, #ffffff, #EAE6E1)' }}
-      animate={{ background: 'linear-gradient(to bottom right, #8BADD6,rgb(4, 65, 96))' }}
+      className="relative w-full h-full overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: `url('${withBasePath('/intro/lake-background.jpg')}')` }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 2, ease: 'easeInOut' }}
     >
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#A3BFD9_1px,_transparent_1px)] bg-[length:30px_30px]" />
-      </div>
-
       {/* Main content */}
-      <div className="flex flex-col items-center justify-start h-full px-6 pt-16 pb-14 text-center relative z-10 overflow-y-auto">
+      <div className="relative z-10 h-full overflow-y-auto overflow-x-hidden">
+        <div className="flex justify-center min-h-full px-4 sm:px-8 pt-16 pb-14">
+        {/* Frosted panel keeps the text readable over the picture */}
+        <div className="flex flex-col items-center w-full max-w-md bg-white/65 backdrop-blur-md rounded-3xl px-5 sm:px-6 py-8 shadow-xl border border-white/60 text-center">
         {/* Header with Date */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
@@ -128,7 +128,7 @@ END:VCALENDAR`;
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="mb-8"
         >
-          <h2 className="typography-heading text-white mb-4">
+          <h2 className="typography-heading text-[#5b7fa6] mb-4">
             {t.date.heading}
           </h2>
           
@@ -153,19 +153,19 @@ END:VCALENDAR`;
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               onTouchEnd={(e) => e.stopPropagation()}
-              className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/20 transition-colors"
+              className="block bg-white/60 hover:bg-white/90 rounded-xl p-4 border border-dusty-blue/20 transition-colors"
             >
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <MapPin className="w-5 h-5 text-white mr-2" />
+                  <MapPin className="w-5 h-5 text-gray-700 mr-2" />
                 </div>
-                <p className="typography-formal text-lg font-medium text-white">
+                <p className="typography-formal text-lg font-medium text-gray-700">
                   Vendryně
                 </p>
-                <p className="text-sm text-white/80 font-medium">
+                <p className="text-sm text-gray-500 font-medium">
                   {t.date.country}
                 </p>
-                <p className="mt-2 text-xs text-white underline underline-offset-2">
+                <p className="mt-2 text-xs text-gray-700 underline underline-offset-2">
                   {t.date.openMap}
                 </p>
               </div>
@@ -180,14 +180,14 @@ END:VCALENDAR`;
             className="mb-6"
           >
             <div className="flex items-center justify-center mb-3">
-              <Calendar className="w-5 h-5 text-white mr-2" />
-              <span className="text-white font-medium">{t.date.saveTheDate}</span>
+              <Calendar className="w-5 h-5 text-gray-700 mr-2" />
+              <span className="text-gray-700 font-medium">{t.date.saveTheDate}</span>
             </div>
             
             <div className="flex flex-wrap justify-center gap-2">
               <button
                 onClick={() => handleSaveDate('google')}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-lg px-4 py-2 text-white text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2"
+                className="bg-white/70 hover:bg-white border border-dusty-blue/30 rounded-lg px-4 py-2 text-gray-700 text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2"
               >
                 <Calendar className="w-4 h-4" />
                 Google
@@ -195,7 +195,7 @@ END:VCALENDAR`;
               
               <button
                 onClick={() => handleSaveDate('outlook')}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-lg px-4 py-2 text-white text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2"
+                className="bg-white/70 hover:bg-white border border-dusty-blue/30 rounded-lg px-4 py-2 text-gray-700 text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2"
               >
                 <Calendar className="w-4 h-4" />
                 Outlook
@@ -203,7 +203,7 @@ END:VCALENDAR`;
               
               <button
                 onClick={() => handleSaveDate('ics')}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-lg px-4 py-2 text-white text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2"
+                className="bg-white/70 hover:bg-white border border-dusty-blue/30 rounded-lg px-4 py-2 text-gray-700 text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 {t.date.download}
@@ -220,14 +220,14 @@ END:VCALENDAR`;
           className="w-full max-w-md"
         >
           <div className="flex items-center justify-center mb-6">
-            <h3 className="typography-subheading text-white">{t.date.timeline}</h3>
+            <h3 className="typography-subheading text-[#5b7fa6]">{t.date.timeline}</h3>
           </div>
-          <div className="w-16 h-px bg-white/60 mx-auto mb-6" />
+          <div className="w-16 h-px bg-dusty-blue/50 mx-auto mb-6" />
 
           {/* Timeline */}
           <div className="relative">
             {/* Main vertical line */}
-            <div className="absolute left-2 top-0 bottom-0 w-px bg-white/60"></div>
+            <div className="absolute left-2 top-0 bottom-0 w-px bg-dusty-blue/50"></div>
             
             <div className="space-y-8">
               {scheduleItems.map((item, index) => (
@@ -243,20 +243,20 @@ END:VCALENDAR`;
                   className="relative flex items-start"
                 >
                   {/* Timeline dot */}
-                  <div className="flex-shrink-0 w-4 h-4 bg-white rounded-full border-2 border-white/80 shadow-lg z-10"></div>
+                  <div className="flex-shrink-0 w-4 h-4 bg-dusty-blue rounded-full border-2 border-white shadow z-10"></div>
                   
                   {/* Content */}
                   <div className="ml-6 flex-1 text-left">
                     {/* Time */}
                     <div className="mb-2">
-                      <h3 className="typography-formal text-xl font-bold text-white tracking-wide">
+                      <h3 className="typography-formal text-xl font-bold text-gray-700 tracking-wide">
                         {t.date.schedule[index].time}
                       </h3>
                     </div>
                     
                     {/* Event Title and Location Pin */}
                     <div className="flex items-center justify-between">
-                      <h4 className="typography-formal text-base font-medium text-white/95 uppercase tracking-wider">
+                      <h4 className="typography-formal text-base font-medium text-gray-700 uppercase tracking-wider">
                         {t.date.schedule[index].title}
                       </h4>
                       
@@ -268,10 +268,10 @@ END:VCALENDAR`;
                             window.open(VENUE_MAP_URL, '_blank');
                           }}
                           onTouchEnd={(e) => e.stopPropagation()}
-                          className="ml-3 p-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full transition-all duration-200 hover:scale-110 group"
+                          className="ml-3 p-1.5 bg-white/70 hover:bg-white border border-dusty-blue/30 rounded-full transition-all duration-200 hover:scale-110 group"
                           title={`${t.date.navigateTo} ${item.location}`}
                         >
-                          <MapPin className="w-4 h-4 text-white group-hover:text-white/90" />
+                          <MapPin className="w-4 h-4 text-[#5b7fa6] group-hover:text-[#3f6189]" />
                         </button>
                       )}
                     </div>
@@ -288,7 +288,7 @@ END:VCALENDAR`;
             transition={{ duration: 0.8, delay: 1.2 }}
             className="text-center mt-6"
           >
-            <p className="text-sm typography-formal text-white/80 italic">
+            <p className="text-sm typography-formal text-gray-500 italic">
               {t.date.closing}
             </p>
           </motion.div>
@@ -301,30 +301,30 @@ END:VCALENDAR`;
           transition={{ duration: 0.8, delay: 1.4 }}
           className="w-full max-w-md mt-8"
         >
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="bg-white/60 rounded-2xl p-6 border border-dusty-blue/20">
             <div className="flex items-center justify-center mb-4">
-              <Phone className="w-5 h-5 text-white mr-2" />
-              <span className="text-white font-medium">{t.date.moreInfo}</span>
+              <Phone className="w-5 h-5 text-gray-700 mr-2" />
+              <span className="text-gray-700 font-medium">{t.date.moreInfo}</span>
             </div>
             
             <div className="space-y-3">
               <div className="text-center">
-                <p className="text-white/90 text-sm font-medium mb-1">{t.date.rsvp}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">{t.date.rsvp}</p>
                 <a 
                   href="tel:+26775950123" 
-                  className="text-white hover:text-white/80 transition-colors duration-200 font-medium"
+                  className="text-gray-700 hover:text-[#3f6189] transition-colors duration-200 font-medium"
                 >
                   Kaone +267 75 950 123
                 </a>
               </div>
               
-              <div className="w-12 h-px bg-white/40 mx-auto" />
+              <div className="w-12 h-px bg-dusty-blue/40 mx-auto" />
               
               <div className="text-center">
-                <p className="text-white/90 text-sm font-medium mb-1">{t.date.contact}</p>
+                <p className="text-gray-600 text-sm font-medium mb-1">{t.date.contact}</p>
                 <a 
                   href="tel:+26775268992" 
-                  className="text-white hover:text-white/80 transition-colors duration-200 font-medium"
+                  className="text-gray-700 hover:text-[#3f6189] transition-colors duration-200 font-medium"
                 >
                   Seelo +267 75 268 992
                 </a>
@@ -332,6 +332,9 @@ END:VCALENDAR`;
             </div>
           </div>
         </motion.div>
+
+        </div>
+        </div>
 
         {/* Decorative elements */}
         <div className="absolute inset-0 pointer-events-none">
