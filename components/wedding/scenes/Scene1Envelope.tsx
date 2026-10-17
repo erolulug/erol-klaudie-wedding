@@ -1,7 +1,7 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { withBasePath } from '@/lib/utils';
 import TravelStamp from '../TravelStamp';
@@ -29,6 +29,9 @@ const FLIGHT_DURATION = 13;
 // gentle take-off and landing, steady cruising speed in between
 const FLIGHT_EASE = [0.3, 0.12, 0.7, 0.88] as const;
 const LANDED = FLIGHT_START + FLIGHT_DURATION;
+// the plane flies all the way to Czechia; the dashed line stays behind its tail
+const PLANE_END = 1;
+const PLANE_TAIL_PX = 14;
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 14 },
   animate: { opacity: 1, y: 0 },
@@ -43,7 +46,7 @@ function buildFlightPath(map: Box, text: Box, pageWidth: number) {
   const tx = map.x + (ISTANBUL.x / MAP_W) * map.w;
   const ty = map.y + (ISTANBUL.y / MAP_H) * map.h;
   const vx = map.x + (VENDRYNE.x / MAP_W) * map.w;
-  const vy = map.y + (VENDRYNE.y / MAP_H) * map.h + 4;
+  const vy = map.y + (VENDRYNE.y / MAP_H) * map.h;
 
   // Classic heart drawn in a 0..1 box: rounded lobes, V-shaped dip at the top
   // (0.5, 0.3) and a point at the bottom (0.5, 1). The text sits between
@@ -57,10 +60,10 @@ function buildFlightPath(map: Box, text: Box, pageWidth: number) {
   const notch = { x: cx, y: top + 0.3 * H };
   const f = (n: number) => n.toFixed(1);
 
+  const entry = `M${f(tx)} ${f(ty)} C${f(tx)} ${f(ty + (notch.y - ty) * 0.5)} ${P(0.62, 0.15)} ${P(0.5, 0.3)}`;
   const d = [
-    `M${f(tx)} ${f(ty)}`,
     // glide down from Turkey into the dip of the heart
-    `C${f(tx)} ${f(ty + (notch.y - ty) * 0.5)} ${P(0.62, 0.15)} ${P(0.5, 0.3)}`,
+    entry,
     // left half: lobe, side, down to the point
     `C${P(0.42, 0.2)} ${P(0.35, 0.15)} ${P(0.25, 0.15)}`,
     `C${P(0.05, 0.15)} ${P(0, 0.32)} ${P(0, 0.42)}`,
@@ -75,7 +78,27 @@ function buildFlightPath(map: Box, text: Box, pageWidth: number) {
 
   // Stamp goes in the lower part of the heart, between the text and the point
   const stampSize = Math.min(84, W * 0.21, H * 0.17);
-  return { d, stamp: { x: cx, y: top + 0.835 * H, size: stampSize } };
+  return { d, entry, notch, stamp: { x: cx, y: top + 0.835 * H, size: stampSize } };
+}
+
+type Point = { x: number; y: number };
+
+// Lengths of SVG paths, measured by the browser
+function pathLengths(...paths: string[]) {
+  if (typeof document === 'undefined') return paths.map(() => 0);
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.style.position = 'absolute';
+  svg.style.visibility = 'hidden';
+  const els = paths.map((d) => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('d', d);
+    return el;
+  });
+  svg.append(...els);
+  document.body.appendChild(svg);
+  const lengths = els.map((el) => el.getTotalLength());
+  svg.remove();
+  return lengths;
 }
 
 export default function Scene1Envelope(_props: SceneProps) {
@@ -83,7 +106,24 @@ export default function Scene1Envelope(_props: SceneProps) {
   const pageRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const [flight, setFlight] = useState<{ d: string; w: number; h: number; stamp: { x: number; y: number; size: number } } | null>(null);
+  const [flight, setFlight] = useState<{ d: string; w: number; h: number; notch: Point; notchAt: number; stamp: { x: number; y: number; size: number } } | null>(null);
+  const routeLength = useRef(1);
+
+  // One shared clock for the plane and the line, so the line is always drawn
+  // right behind the plane's tail and never appears ahead of it
+  const progress = useMotionValue(0);
+  useEffect(() => {
+    const flightAnimation = animate(progress, 1, { duration: FLIGHT_DURATION, delay: FLIGHT_START, ease: FLIGHT_EASE });
+    return () => flightAnimation.stop();
+  }, [progress]);
+  const planeDistance = useTransform(progress, (p) => `${p * PLANE_END * 100}%`);
+  const planeOpacity = useTransform(progress, (p) => (p > 0 ? 1 : 0));
+  const lineDrawn = useTransform(progress, (p) => Math.max(0, p * PLANE_END - PLANE_TAIL_PX / routeLength.current));
+  // the dip waypoint pops exactly when the plane reaches it
+  const [notchReached, setNotchReached] = useState(false);
+  useMotionValueEvent(progress, 'change', (p) => {
+    if (!notchReached && flight && p * PLANE_END >= flight.notchAt) setNotchReached(true);
+  });
 
   // Measure layout (ignoring animation transforms) and rebuild the route when it changes
   useLayoutEffect(() => {
@@ -92,8 +132,12 @@ export default function Scene1Envelope(_props: SceneProps) {
     const text = textRef.current;
     if (!page || !map || !text) return;
     const box = (el: HTMLElement): Box => ({ x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight });
-    const update = () =>
-      setFlight({ ...buildFlightPath(box(map), box(text), page.offsetWidth), w: page.offsetWidth, h: page.offsetHeight });
+    const update = () => {
+      const { d, entry, notch, stamp } = buildFlightPath(box(map), box(text), page.offsetWidth);
+      const [entryLength, fullLength] = pathLengths(entry, d);
+      routeLength.current = fullLength || 1;
+      setFlight({ d, notch, stamp, notchAt: entryLength / routeLength.current, w: page.offsetWidth, h: page.offsetHeight });
+    };
     update();
     const observer = new ResizeObserver(update);
     [page, map, text].forEach((el) => observer.observe(el));
@@ -190,27 +234,40 @@ export default function Scene1Envelope(_props: SceneProps) {
                   d={flight.d}
                   fill="none"
                   stroke="white"
-                  strokeWidth="12"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: FLIGHT_DURATION, delay: FLIGHT_START, ease: FLIGHT_EASE }}
+                  strokeWidth="7"
+                  style={{ pathLength: lineDrawn }}
                 />
               </mask>
               <g mask="url(#route-reveal)">
-                <path d={flight.d} fill="none" stroke={PINK} strokeWidth="4" strokeDasharray="7 6" strokeLinecap="round" />
-                <path d={flight.d} fill="none" stroke="white" strokeWidth="2" strokeDasharray="7 6" strokeLinecap="round" />
+                <path d={flight.d} fill="none" stroke={PINK} strokeWidth="4" strokeDasharray="7 6" strokeLinecap="round" strokeLinejoin="round" />
+                <path d={flight.d} fill="none" stroke="white" strokeWidth="2" strokeDasharray="7 6" strokeLinecap="round" strokeLinejoin="round" />
               </g>
+
+              {/* Waypoint at the heart's dip, where the route lines meet - covers the junction */}
+              <motion.circle
+                cx={flight.notch.x}
+                cy={flight.notch.y}
+                r="5.5"
+                fill={PINK}
+                stroke="white"
+                strokeWidth="2"
+                initial={{ scale: 0 }}
+                animate={notchReached ? { scale: [0, 1.5, 1] } : { scale: 0 }}
+                style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+                transition={{ duration: 0.45 }}
+              />
             </svg>
 
             {/* Plane follows the same route (CSS motion path) */}
             <motion.div
               className="absolute left-0 top-0 pointer-events-none"
-              style={{ offsetPath: `path("${flight.d}")`, offsetRotate: 'auto', width: 30, height: 30 }}
-              initial={{ offsetDistance: '0%', opacity: 0 }}
-              animate={{ offsetDistance: '98%', opacity: 1 }}
-              transition={{
-                offsetDistance: { duration: FLIGHT_DURATION, delay: FLIGHT_START, ease: FLIGHT_EASE },
-                opacity: { duration: 0.3, delay: FLIGHT_START },
+              style={{
+                offsetPath: `path("${flight.d}")`,
+                offsetRotate: 'auto',
+                offsetDistance: planeDistance,
+                opacity: planeOpacity,
+                width: 30,
+                height: 30,
               }}
             >
               <svg viewBox="-16 -13 32 26" className="w-full h-full overflow-visible">

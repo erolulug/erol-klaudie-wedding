@@ -141,6 +141,56 @@ END:VCALENDAR`;
             <div className="typography-formal text-2xl font-medium text-blush">{t.date.year}</div>
           </div>
 
+        </motion.div>
+
+        {/* Schedule Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="w-full max-w-md"
+        >
+          <div className="flex items-center justify-center mb-6">
+            <h3 className="typography-subheading text-[#d99aac]">{t.date.timeline}</h3>
+          </div>
+          <div className="w-16 h-px bg-blush/50 mx-auto" />
+
+          {/* Timeline drawn as a flight route */}
+          <FlightTimeline
+            items={scheduleItems.map((item, index) => ({
+              time: t.date.schedule[index].time,
+              title: t.date.schedule[index].title,
+              action: item.showPin ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(VENUE_MAP_URL, '_blank');
+                  }}
+                  onTouchEnd={(e) => e.stopPropagation()}
+                  className="ml-3 p-1.5 bg-white/70 hover:bg-white border border-blush/30 rounded-full transition-all duration-200 hover:scale-110 group"
+                  title={`${t.date.navigateTo} ${item.location}`}
+                >
+                  <MapPin className="w-4 h-4 text-[#d99aac] group-hover:text-[#c98399]" />
+                </button>
+              ) : undefined,
+            }))}
+          />
+
+          {/* Bottom message */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            className="text-center mt-6"
+          >
+            <p className="font-serif italic text-xl sm:text-2xl leading-snug text-gray-600">
+              {t.date.closing}
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* Venue and save-the-date, after the hour-by-hour timeline */}
+        <div className="w-full max-w-md mt-8">
           {/* Location Display */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -211,53 +261,7 @@ END:VCALENDAR`;
               </button>
             </div>
           </motion.div>
-        </motion.div>
-
-        {/* Schedule Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full max-w-md"
-        >
-          <div className="flex items-center justify-center mb-6">
-            <h3 className="typography-subheading text-[#d99aac]">{t.date.timeline}</h3>
-          </div>
-          <div className="w-16 h-px bg-blush/50 mx-auto" />
-
-          {/* Timeline drawn as a flight route */}
-          <FlightTimeline
-            items={scheduleItems.map((item, index) => ({
-              time: t.date.schedule[index].time,
-              title: t.date.schedule[index].title,
-              action: item.showPin ? (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    window.open(VENUE_MAP_URL, '_blank');
-                  }}
-                  onTouchEnd={(e) => e.stopPropagation()}
-                  className="ml-3 p-1.5 bg-white/70 hover:bg-white border border-blush/30 rounded-full transition-all duration-200 hover:scale-110 group"
-                  title={`${t.date.navigateTo} ${item.location}`}
-                >
-                  <MapPin className="w-4 h-4 text-[#d99aac] group-hover:text-[#c98399]" />
-                </button>
-              ) : undefined,
-            }))}
-          />
-
-          {/* Bottom message */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="text-center mt-6"
-          >
-            <p className="font-serif italic text-xl sm:text-2xl leading-snug text-gray-600">
-              {t.date.closing}
-            </p>
-          </motion.div>
-        </motion.div>
+        </div>
 
         {/* Contact Information Section */}
         <motion.div

@@ -1,10 +1,12 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animate, motion, useInView, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion';
 
 const PINK = '#d99aac';
 const FLIGHT_DURATION = 9;
+// the dashed line stays just behind the plane's tail
+const PLANE_TAIL_PX = 13;
 const PLANE_PATH =
   'M14 0 L4 -2.5 L-3 -11 L-7 -11 L-2 -2.5 L-9 -2.5 L-12 -6.5 L-14.5 -6.5 L-13 0 L-14.5 6.5 L-12 6.5 L-9 2.5 L-2 2.5 L-7 11 L-3 11 L4 2.5 Z';
 
@@ -19,18 +21,36 @@ export interface TimelineItem {
 
 type Point = { x: number; y: number };
 
-// Smooth curve through the points (Catmull-Rom converted to cubic Béziers)
-function smoothPath(pts: Point[]) {
+// Smooth curve through the points (Catmull-Rom converted to cubic Béziers),
+// returned as segments: segments[k] ends at pts[k]
+function smoothSegments(pts: Point[]) {
   const f = (n: number) => n.toFixed(1);
-  let d = `M${f(pts[0].x)} ${f(pts[0].y)}`;
+  const segments = [`M${f(pts[0].x)} ${f(pts[0].y)}`];
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = pts[i - 1] ?? pts[i];
     const p1 = pts[i];
     const p2 = pts[i + 1];
     const p3 = pts[i + 2] ?? p2;
-    d += ` C${f(p1.x + (p2.x - p0.x) / 6)} ${f(p1.y + (p2.y - p0.y) / 6)} ${f(p2.x - (p3.x - p1.x) / 6)} ${f(p2.y - (p3.y - p1.y) / 6)} ${f(p2.x)} ${f(p2.y)}`;
+    segments.push(`C${f(p1.x + (p2.x - p0.x) / 6)} ${f(p1.y + (p2.y - p0.y) / 6)} ${f(p2.x - (p3.x - p1.x) / 6)} ${f(p2.y - (p3.y - p1.y) / 6)} ${f(p2.x)} ${f(p2.y)}`);
   }
-  return d;
+  return segments;
+}
+
+// Lengths of SVG paths, measured by the browser
+function pathLengths(paths: string[]) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.style.position = 'absolute';
+  svg.style.visibility = 'hidden';
+  const els = paths.map((d) => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('d', d);
+    return el;
+  });
+  svg.append(...els);
+  document.body.appendChild(svg);
+  const lengths = els.map((el) => el.getTotalLength());
+  svg.remove();
+  return lengths;
 }
 
 // Event timeline drawn as a dashed flight route: the plane flies through
@@ -40,6 +60,25 @@ export default function FlightTimeline({ items }: { items: TimelineItem[] }) {
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const inView = useInView(boxRef, { once: true, amount: 0.3 });
   const [route, setRoute] = useState<{ d: string; w: number; h: number; stops: number[] } | null>(null);
+  const routeLength = useRef(1);
+
+  // One shared clock for plane, line and dots (starts when the timeline is in view)
+  const progress = useMotionValue(0);
+  useEffect(() => {
+    if (!inView) return;
+    const flight = animate(progress, 1, { duration: FLIGHT_DURATION, ease: 'linear' });
+    return () => flight.stop();
+  }, [inView, progress]);
+  const planeDistance = useTransform(progress, (p) => `${p * 100}%`);
+  const planeOpacity = useTransform(progress, (p) => (p > 0 ? 1 : 0));
+  const lineDrawn = useTransform(progress, (p) => Math.max(0, p - PLANE_TAIL_PX / routeLength.current));
+  // how many stops the plane has passed - each dot pops as the plane reaches it
+  const [reached, setReached] = useState(0);
+  useMotionValueEvent(progress, 'change', (p) => {
+    if (!route) return;
+    const count = route.stops.filter((share) => p >= share).length;
+    if (count !== reached) setReached(count);
+  });
 
   useLayoutEffect(() => {
     const box = boxRef.current;
@@ -71,11 +110,13 @@ export default function FlightTimeline({ items }: { items: TimelineItem[] }) {
         { x: W * 0.6, y: last.y + 85 },
         { x: W * 0.9, y: last.y + 125 },
       ];
-      // share of the route length at which the plane reaches each stop
-      let total = 0;
-      const lengthAt = pts.map((p, i) => (i ? (total += Math.hypot(p.x - pts[i - 1].x, p.y - pts[i - 1].y)) : 0));
-      const stopShare = stops.map((_, i) => lengthAt[1 + i] / total);
-      setRoute({ d: smoothPath(pts), w: W, h: box.offsetHeight, stops: stopShare });
+      // exact share of the route length at which the plane reaches each stop
+      const segments = smoothSegments(pts);
+      const d = segments.join(' ');
+      const prefixes = stops.map((_, i) => segments.slice(0, i + 2).join(' '));
+      const [full, ...atStops] = pathLengths([d, ...prefixes]);
+      routeLength.current = full || 1;
+      setRoute({ d, w: W, h: box.offsetHeight, stops: atStops.map((l) => l / routeLength.current) });
     };
     update();
     const observer = new ResizeObserver(update);
@@ -98,24 +139,26 @@ export default function FlightTimeline({ items }: { items: TimelineItem[] }) {
                 d={route.d}
                 fill="none"
                 stroke="white"
-                strokeWidth="12"
-                initial={{ pathLength: 0 }}
-                animate={inView ? { pathLength: 1 } : { pathLength: 0 }}
-                transition={{ duration: FLIGHT_DURATION, ease: 'linear' }}
+                strokeWidth="7"
+                style={{ pathLength: lineDrawn }}
               />
             </mask>
             <g mask="url(#timeline-reveal)">
-              <path d={route.d} fill="none" stroke={PINK} strokeWidth="4" strokeDasharray="7 6" strokeLinecap="round" />
-              <path d={route.d} fill="none" stroke="white" strokeWidth="2" strokeDasharray="7 6" strokeLinecap="round" />
+              <path d={route.d} fill="none" stroke={PINK} strokeWidth="4" strokeDasharray="7 6" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={route.d} fill="none" stroke="white" strokeWidth="2" strokeDasharray="7 6" strokeLinecap="round" strokeLinejoin="round" />
             </g>
           </svg>
 
           <motion.div
             className="absolute left-0 top-0 pointer-events-none z-10"
-            style={{ offsetPath: `path("${route.d}")`, offsetRotate: 'auto', width: 28, height: 28 }}
-            initial={{ offsetDistance: '0%', opacity: 0 }}
-            animate={inView ? { offsetDistance: '100%', opacity: 1 } : { offsetDistance: '0%', opacity: 0 }}
-            transition={{ offsetDistance: { duration: FLIGHT_DURATION, ease: 'linear' }, opacity: { duration: 0.3 } }}
+            style={{
+              offsetPath: `path("${route.d}")`,
+              offsetRotate: 'auto',
+              offsetDistance: planeDistance,
+              opacity: planeOpacity,
+              width: 28,
+              height: 28,
+            }}
           >
             <svg viewBox="-16 -13 32 26" className="w-full h-full overflow-visible">
               <path d={PLANE_PATH} fill={PINK} stroke="white" strokeWidth="1.2" strokeLinejoin="round" />
@@ -134,8 +177,8 @@ export default function FlightTimeline({ items }: { items: TimelineItem[] }) {
               }}
               className="relative z-[5] mt-2 flex-shrink-0 w-3.5 h-3.5 rounded-full bg-[#d99aac] border-2 border-white shadow"
               initial={{ scale: 0 }}
-              animate={inView && route ? { scale: [0, 1.5, 1] } : { scale: 0 }}
-              transition={{ duration: 0.45, delay: (route?.stops[i] ?? 0) * FLIGHT_DURATION }}
+              animate={i < reached ? { scale: [0, 1.5, 1] } : { scale: 0 }}
+              transition={{ duration: 0.45 }}
             />
             <div className="ml-4 flex-1">
               <p className="font-serif text-xl font-bold text-gray-700 tracking-wide">{item.time}</p>
