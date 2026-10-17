@@ -15,7 +15,6 @@ interface SceneProps {
 
 export default function Scene2Blessing({ isActive }: SceneProps) {
   const { t, language } = useLanguage();
-  const [isMounted, setIsMounted] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -23,9 +22,6 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
     seconds: 0
   });
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // Countdown timer effect
   useEffect(() => {
@@ -53,15 +49,6 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Generate consistent positions for floating elements
-  const floatingElements = Array.from({ length: 6 }, (_, i) => ({
-    x: (i * 67 + 50) % 400,
-    y: (i * 89 + 100) % 600,
-    duration: 4 + (i % 3),
-    delay: i * 0.3,
-    symbol: ['💙', '✨', '🌸', '💫', '🤍', '🌟'][i],
-  }));
-
   return (
     <div
       className="relative w-full h-full bg-cover bg-center overflow-hidden"
@@ -84,7 +71,7 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
             transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
             className="mb-8"
           >
-            <div className="mb-5 flex items-center justify-center gap-4 font-script text-6xl text-dusty-blue leading-none">
+            <div className="mb-5 flex items-center justify-center gap-4 font-script text-6xl text-blush leading-none">
               <span>E</span>
               <motion.span
                 animate={{ scale: [1, 1.18, 1] }}
@@ -95,7 +82,7 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
               </motion.span>
               <span>K</span>
             </div>
-            <div className="w-24 h-px bg-dusty-blue mx-auto mb-4" />
+            <div className="w-24 h-px bg-blush mx-auto mb-4" />
           </motion.div>
 
           {/* Main text */}
@@ -114,9 +101,13 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="border-t border-b border-dusty-blue/30 py-4 my-6"
+              className="border-t border-b border-blush/30 py-4 my-6"
             >
-              <p className="font-body italic text-lg sm:text-xl leading-relaxed text-[#3f6189]">
+              {/* Sized per language to the screen width so it always fits on one line */}
+              <p
+                className="font-body italic leading-snug whitespace-nowrap text-[#c98399]"
+                style={{ fontSize: { cs: 'min(26px, 5.1vw)', tr: 'min(21px, 4.1vw)', en: 'min(23px, 4.45vw)' }[language] }}
+              >
                 {greetings[language]}
               </p>
        
@@ -138,38 +129,38 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
               transition={{ duration: 0.8, delay: 2.0 }}
               className="text-center mt-8"
             >
-              <h3 className="typography-formal text-lg text-gray-600 mb-4">{t.blessing.seeYouIn}</h3>
+              <h3 className="font-serif font-bold text-xl tracking-wider text-gray-800 mb-4">{t.blessing.seeYouIn}</h3>
               <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-sm mx-auto">
                 <motion.div 
-                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-blush/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0 }}
                 >
-                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.days}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-blush leading-tight">{timeLeft.days}</div>
                   <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.days}</div>
                 </motion.div>
                 <motion.div 
-                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-blush/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0.25 }}
                 >
-                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.hours}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-blush leading-tight">{timeLeft.hours}</div>
                   <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.hours}</div>
                 </motion.div>
                 <motion.div 
-                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-blush/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
                 >
-                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.minutes}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-blush leading-tight">{timeLeft.minutes}</div>
                   <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.minutes}</div>
                 </motion.div>
                 <motion.div 
-                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-dusty-blue/20"
+                  className="min-w-0 bg-white/80 rounded-lg px-1 py-2.5 sm:p-3 shadow-sm border border-blush/20"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 1, repeat: Infinity, delay: 0.75 }}
                 >
-                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-dusty-blue leading-tight">{timeLeft.seconds}</div>
+                  <div className="font-decorative font-semibold text-xl sm:text-2xl text-blush leading-tight">{timeLeft.seconds}</div>
                   <div className="font-body text-gray-600 text-[11px] sm:text-xs">{t.blessing.seconds}</div>
                 </motion.div>
               </div>
@@ -178,34 +169,6 @@ export default function Scene2Blessing({ isActive }: SceneProps) {
         </motion.div>
         </div>
 
-        {/* Floating elements - only render after mount */}
-        {isMounted && (
-          <div className="absolute inset-0 pointer-events-none">
-            {floatingElements.map((element, i) => (
-              <motion.div
-                key={i}
-                className="absolute text-dusty-blue/20 text-2xl"
-                initial={{
-                  x: element.x,
-                  y: element.y,
-                  rotate: 0,
-                }}
-                animate={{
-                  rotate: 360,
-                  y: [element.y, element.y - 20, element.y],
-                }}
-                transition={{
-                  duration: element.duration,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: element.delay,
-                }}
-              >
-                {element.symbol}
-              </motion.div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

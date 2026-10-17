@@ -23,6 +23,13 @@ const en = {
     mute: 'Mute music',
     language: 'Language',
   },
+  travel: {
+    married: 'are getting married!',
+    invited: "You're invited!",
+    adventure: 'Pack your bags, fasten your seatbelts, and get ready for our greatest adventure!',
+    from: 'Turkey',
+    to: 'Czechia',
+  },
   intro: {
     open: 'Open Invitation',
   },
@@ -44,7 +51,7 @@ const en = {
     seconds: 'Seconds',
   },
   date: {
-    heading: 'The day the heavens will smile',
+    heading: 'Program of the Day',
     weekday: 'Saturday',
     day: '14',
     month: 'August',
@@ -55,7 +62,7 @@ const en = {
     openMap: 'Open in Google Maps',
     saveTheDate: 'Save the Date',
     download: 'Download',
-    timeline: 'Timeline',
+    timeline: 'Hour by Hour',
     schedule: [
       { time: '1:00 PM', title: 'GUEST ARRIVAL' },
       { time: '2:00 PM', title: 'CEREMONY' },
@@ -131,6 +138,13 @@ const cs: Translations = {
     mute: 'Ztlumit hudbu',
     language: 'Jazyk',
   },
+  travel: {
+    married: 'se berou!',
+    invited: 'Jste zváni!',
+    adventure: 'Sbalte si kufry, zapněte si pásy a připravte se na naše největší dobrodružství!',
+    from: 'Turecko',
+    to: 'Česko',
+  },
   intro: {
     open: 'Otevřít pozvánku',
   },
@@ -152,7 +166,7 @@ const cs: Translations = {
     seconds: 'Sekund',
   },
   date: {
-    heading: 'Den, kdy se nebesa usmějí',
+    heading: 'Program dne',
     weekday: 'Sobota',
     day: '14.',
     month: 'srpna',
@@ -163,7 +177,7 @@ const cs: Translations = {
     openMap: 'Otevřít v Mapách Google',
     saveTheDate: 'Uložte si datum',
     download: 'Stáhnout',
-    timeline: 'Program',
+    timeline: 'Hodinu po hodině',
     schedule: [
       { time: '13:00', title: 'PŘÍJEZD HOSTŮ' },
       { time: '14:00', title: 'OBŘAD' },
@@ -237,6 +251,13 @@ const tr: Translations = {
     mute: 'Müziği kapat',
     language: 'Dil',
   },
+  travel: {
+    married: 'Evleniyor!',
+    invited: 'Davetlisiniz!',
+    adventure: 'Bavullarınızı hazırlayın, kemerlerinizi bağlayın ve en büyük maceramıza hazır olun!',
+    from: 'Türkiye',
+    to: 'Çekya',
+  },
   intro: {
     open: 'Davetiyeyi Aç',
   },
@@ -258,7 +279,7 @@ const tr: Translations = {
     seconds: 'Saniye',
   },
   date: {
-    heading: 'Göklerin gülümseyeceği gün',
+    heading: 'Günün Programı',
     weekday: 'Cumartesi',
     day: '14',
     month: 'Ağustos',
@@ -269,7 +290,7 @@ const tr: Translations = {
     openMap: "Google Haritalar'da aç",
     saveTheDate: 'Tarihi Kaydedin',
     download: 'İndir',
-    timeline: 'Günün Akışı',
+    timeline: 'Saat Saat',
     schedule: [
       { time: '13:00', title: 'MİSAFİRLERİN KARŞILANMASI' },
       { time: '14:00', title: 'NİKAH TÖRENİ' },

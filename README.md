@@ -50,12 +50,12 @@ Open http://localhost:3000. Changes reload automatically.
 | RSVP form link | `components/wedding/scenes/Scene11RSVP.tsx` |
 | Countdown date | `components/wedding/scenes/Scene2Blessing.tsx` |
 | Share preview (WhatsApp, social media) | `app/layout.tsx` |
-| Music | `public/audio/wedding-music-v2.mp3` |
+| Music | `public/audio/wedding-music-v3.mp3` |
 | Colours and fonts | `app/globals.css` |
 
 When changing text, update it in all three languages in `lib/i18n.tsx`.
 
-**Music:** when replacing the song, give the file a new name (e.g. `wedding-music-v3.mp3`) and update it in `components/wedding/WeddingStory.tsx`. Browsers cache the old file if the name stays the same.
+**Music:** when replacing the song, give the file a new name (e.g. `wedding-music-v4.mp3`) and update it in `components/wedding/WeddingStory.tsx`. Browsers cache the old file if the name stays the same.
 
 **Photos:** use `.jpg` (browsers can't show iPhone `.heic` files) and keep them around 2000px wide so the site loads quickly. Images in `public/` must be referenced through `withBasePath('/images/...')` so they work on GitHub Pages.
 

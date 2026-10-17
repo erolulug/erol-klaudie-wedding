@@ -13,6 +13,9 @@
   --font-decorative: 'Playfair Display', serif;
   --font-body: 'Playfair Display', serif;
   --color-dusty-blue: #A3BFD9;
+  /* rose pink from the flower artwork: blush for decoration, rose-deep for smaller text */
+  --color-blush: #eab0bf;
+  --color-rose-deep: #c98399;
   --color-silver: #C5C6C7;
   --color-beige: #EAE6E1;
   --color-sidebar-ring: var(--sidebar-ring);

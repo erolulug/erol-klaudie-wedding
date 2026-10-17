@@ -51,7 +51,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
   const [isAudioError, setIsAudioError] = useState(false);
 
   // Background music - add your wedding music file to public/audio/
-  const [play, { stop, pause, sound }] = useSound(withBasePath('/audio/wedding-music-v2.mp3'), {
+  const [play, { stop, pause, sound }] = useSound(withBasePath('/audio/wedding-music-v3.mp3'), {
     loop: true,
     volume: 0.3,
     preload: true, // Preload the audio file
@@ -61,7 +61,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
       setIsAudioError(false);
     },
     onloaderror: (error: any) => {
-      console.log('Could not load wedding music. Please add wedding-music-v2.mp3 to public/audio/', error);
+      console.log('Could not load wedding music. Please add wedding-music-v3.mp3 to public/audio/', error);
       setIsAudioLoaded(false);
       setIsAudioError(true);
     }
@@ -196,8 +196,10 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
         </button>
       )}
 
-      {/* Scene content */}
+      {/* Scene content - only mounted once the envelope is opened, so page 1's
+          animation starts when guests can actually see it */}
       <AnimatePresence mode="wait">
+        {isEnvelopeOpened && (
         <motion.div
           key={currentScene}
           initial={{ opacity: 0, scale: 1.1 }}
@@ -212,6 +214,7 @@ export default function WeddingStory({ onComplete }: WeddingStoryProps) {
             isActive={true}
           />
         </motion.div>
+        )}
       </AnimatePresence>
 
 

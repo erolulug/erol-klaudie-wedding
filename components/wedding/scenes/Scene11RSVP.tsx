@@ -17,10 +17,10 @@ export default function Scene11RSVP({ onNext, onPrev, isActive }: SceneProps) {
     <div className="relative w-full h-full bg-gradient-to-b from-white to-beige">
       {/* Watercolor border effect (consistent with other scenes) */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-dusty-blue/10 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-dusty-blue/10 to-transparent" />
-        <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-dusty-blue/10 to-transparent" />
-        <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-dusty-blue/10 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-blush/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-blush/10 to-transparent" />
+        <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-blush/10 to-transparent" />
+        <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-blush/10 to-transparent" />
       </div>
 
       {/* Main content */}
@@ -33,7 +33,7 @@ export default function Scene11RSVP({ onNext, onPrev, isActive }: SceneProps) {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="max-w-2xl w-full mt-8 mb-8"
         >
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-dusty-blue/20">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-blush/20">
             <div className="text-center mb-8">
               <motion.div
                 initial={{ scale: 0 }}
@@ -43,21 +43,21 @@ export default function Scene11RSVP({ onNext, onPrev, isActive }: SceneProps) {
               >
                 💌
               </motion.div>
-              <h3 className="typography-heading text-dusty-blue mb-2">
+              <h3 className="typography-heading text-blush mb-2">
                 {t.rsvp.heading}
               </h3>
-              <div className="w-16 h-px bg-dusty-blue mx-auto mb-4" />
+              <div className="w-16 h-px bg-blush mx-auto mb-4" />
               <p className="typography-body text-gray-600">
                 {t.rsvp.subtitle}
               </p>
-              <div className="bg-dusty-blue/10 rounded-xl p-4 mt-4">
-                <p className="typography-caption text-dusty-blue font-medium">
+              <div className="bg-blush/10 rounded-xl p-4 mt-4">
+                <p className="typography-caption text-rose-deep font-medium">
                   {t.rsvp.deadline}
                 </p>
               </div>
             </div>
             
-            <div className="rounded-xl overflow-hidden border border-dusty-blue/10">
+            <div className="rounded-xl overflow-hidden border border-blush/10">
               <iframe 
                 src="https://docs.google.com/forms/d/e/1FAIpQLSffPqVzNMfWKuFzvOAACTeEzoW4iNIsr61g6BlURAOnqk6ktQ/viewform?embedded=true"
                 width="100%"
@@ -81,7 +81,7 @@ export default function Scene11RSVP({ onNext, onPrev, isActive }: SceneProps) {
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute text-dusty-blue/10 text-2xl"
+            className="absolute text-blush/10 text-2xl"
             style={{
               left: `${10 + Math.random() * 80}%`,
               top: `${10 + Math.random() * 80}%`,

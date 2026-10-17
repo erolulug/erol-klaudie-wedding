@@ -3,7 +3,7 @@
 Place your wedding music files in this directory.
 
 ## Current file:
-- `wedding-music-v2.mp3` - background music, loops while guests view the invitation
+- `wedding-music-v3.mp3` - background music, loops while guests view the invitation
 
 ## Optimization Recommendations:
 - Use online tools like [Audio Compressor](https://www.freeconvert.com/audio-compressor) 

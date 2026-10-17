@@ -50,10 +50,10 @@ export default function Scene10Extras({ isActive }: SceneProps) {
   };
 
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-beige via-white to-dusty-blue/20 overflow-hidden">
+    <div className="relative w-full h-full bg-gradient-to-br from-beige via-white to-blush/20 overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,_#A3BFD9_1px,_transparent_1px),_radial-gradient(circle_at_75%_75%,_#A3BFD9_1px,_transparent_1px)] bg-[length:40px_40px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,_#eab0bf_1px,_transparent_1px),_radial-gradient(circle_at_75%_75%,_#eab0bf_1px,_transparent_1px)] bg-[length:40px_40px]" />
       </div>
 
       {/* Main content */}
@@ -71,10 +71,10 @@ export default function Scene10Extras({ isActive }: SceneProps) {
             transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
             className="text-center mb-8"
           >
-            <h2 className="text-2xl font-decorative text-dusty-blue mb-2">
+            <h2 className="text-2xl font-decorative text-blush mb-2">
               {t.gallery.heading}
             </h2>
-            <div className="w-16 h-px bg-dusty-blue mx-auto" />
+            <div className="w-16 h-px bg-blush mx-auto" />
           </motion.div>
 
           {/* Creative Photo Grid */}
@@ -103,7 +103,7 @@ export default function Scene10Extras({ isActive }: SceneProps) {
                   onTouchEnd={(e) => e.stopPropagation()}
                 >
                   <div className={`
-                    relative rounded-xl shadow-lg border border-dusty-blue/20 overflow-hidden bg-white
+                    relative rounded-xl shadow-lg border border-blush/20 overflow-hidden bg-white
                     ${photo.size === 'small' ? 'h-48' : photo.size === 'medium' ? 'h-64' : 'h-80'}
                   `}>
                     <Image 
@@ -144,7 +144,7 @@ export default function Scene10Extras({ isActive }: SceneProps) {
           {[...Array(10)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-dusty-blue/20 text-xl"
+              className="absolute text-blush/20 text-xl"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,

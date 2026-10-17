@@ -29,7 +29,7 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
   }));
 
   const colorSwatches = [
-    { name: 'Dusty Blue', color: '#A3BFD9', textColor: 'text-white' },
+    { name: 'Dusty Blue', color: '#eab0bf', textColor: 'text-white' },
     { name: 'Pure White', color: '#FFFFFF', textColor: 'text-gray-700', border: true },
     { name: 'Silver', color: '#C5C6C7', textColor: 'text-gray-700' },
     { name: 'Soft Beige', color: '#EAE6E1', textColor: 'text-gray-700' },
@@ -39,10 +39,10 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
     <div className="relative w-full h-full bg-gradient-to-b from-white to-beige">
       {/* Watercolor border effect (from Scene2) */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-dusty-blue/10 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-dusty-blue/10 to-transparent" />
-        <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-dusty-blue/10 to-transparent" />
-        <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-dusty-blue/10 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-blush/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-blush/10 to-transparent" />
+        <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-blush/10 to-transparent" />
+        <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-blush/10 to-transparent" />
       </div>
 
       {/* Main content */}
@@ -68,10 +68,10 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
                 className="w-42 h-42 object-contain"
               />
             </div>
-            <h2 className="typography-heading text-dusty-blue mb-2">
+            <h2 className="typography-heading text-blush mb-2">
               {t.dressCode.heading}
             </h2>
-            <div className="w-16 h-px bg-dusty-blue mx-auto" />
+            <div className="w-16 h-px bg-blush mx-auto" />
           </motion.div>
 
           {/* Theme Section */}
@@ -82,17 +82,17 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
             className="mb-8"
           >
             <h3 className="typography-subheading text-gray-800 mb-2">{t.dressCode.themeTitle}</h3>
-            <p className="typography-body text-dusty-blue mb-2">{t.dressCode.theme}</p>
+            <p className="typography-body text-rose-deep mb-2">{t.dressCode.theme}</p>
             <p className="typography-caption text-gray-600 italic mb-6">{t.dressCode.themeTagline}</p>
             
             {/* Theme color swatches */}
             <div className="flex justify-center space-x-4 mb-6">
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-dusty-blue shadow-lg border-2 border-white" />
+                <div className="w-12 h-12 rounded-full bg-[#A3BFD9] shadow-lg border-2 border-white" />
                 <span className="text-xs font-body text-gray-600 mt-2">{t.dressCode.dustyBlue}</span>
               </div>
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white shadow-lg border-2 border-dusty-blue/30" />
+                <div className="w-12 h-12 rounded-full bg-white shadow-lg border-2 border-blush/30" />
                 <span className="text-xs font-body text-gray-600 mt-2">{t.dressCode.white}</span>
               </div>
               <div className="flex flex-col items-center">
@@ -101,7 +101,7 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
               </div>
             </div>
             
-            <div className="w-16 h-px bg-dusty-blue mx-auto mb-6" />
+            <div className="w-16 h-px bg-blush mx-auto mb-6" />
         
           </motion.div>
 
@@ -127,7 +127,7 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 1.0 }}
-                className="typography-body text-dusty-blue mb-2"
+                className="typography-body text-rose-deep mb-2"
               >
                 {t.dressCode.matsela}
               </motion.p>
@@ -135,7 +135,7 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
                 initial={{ width: 0 }}
                 animate={{ width: '4rem' }}
                 transition={{ duration: 0.8, delay: 1.1 }}
-                className="h-px bg-dusty-blue mx-auto mb-4"
+                className="h-px bg-blush mx-auto mb-4"
               />
               <motion.p 
                 initial={{ opacity: 0 }}
@@ -161,11 +161,11 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
                   alt="Bride Family Traditional Cloth"
                   className="w-64 h-40 object-cover rounded-xl shadow-lg mb-4 mx-auto"
                 />
-                <h5 className="typography-formal text-lg font-semibold text-dusty-blue mb-2">
+                <h5 className="typography-formal text-lg font-semibold text-blush mb-2">
                   {t.dressCode.bridesSide}
                 </h5>
-                <div className="w-12 h-px bg-dusty-blue mx-auto mb-2" />
-                <p className="typography-caption text-dusty-blue text-sm">
+                <div className="w-12 h-px bg-blush mx-auto mb-2" />
+                <p className="typography-caption text-rose-deep text-sm">
                   {t.dressCode.forBride}
                 </p>
               </motion.div>
@@ -182,11 +182,11 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
                   alt="Groom Family Traditional Cloth"
                   className="w-64 h-40 object-cover rounded-xl shadow-lg mb-4 mx-auto"
                 />
-                <h5 className="typography-formal text-lg font-semibold text-dusty-blue mb-2">
+                <h5 className="typography-formal text-lg font-semibold text-blush mb-2">
                   {t.dressCode.groomsSide}
                 </h5>
-                <div className="w-12 h-px bg-dusty-blue mx-auto mb-2" />
-                <p className="typography-caption text-dusty-blue text-sm">
+                <div className="w-12 h-px bg-blush mx-auto mb-2" />
+                <p className="typography-caption text-rose-deep text-sm">
                   {t.dressCode.forGroom}
                 </p>
               </motion.div>
@@ -213,7 +213,7 @@ export default function Scene6DressCode({ isActive }: SceneProps) {
             {floatingElements.map((element, i) => (
               <motion.div
                 key={i}
-                className="absolute text-dusty-blue/20 text-2xl"
+                className="absolute text-blush/20 text-2xl"
                 initial={{
                   x: element.x,
                   y: element.y,
